@@ -24,8 +24,18 @@ const Statistics = (props) => {
   const total = props.good + props.neutral + props.bad
   const average = (props.bad * (-1) + props.good) / total
   const positive = props.good * (100 / total)
+  if (total === 0) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
   return (
     <div>
+      <Text text="good" number={props.good} />
+      <Text text="neutral" number={props.neutral} />
+      <Text text="bad" number={props.bad} />
       <Text text="all" number={total} />
       <Text text="average" number={average} />
       <Text text="positive" number={positive} />
@@ -60,9 +70,6 @@ const App = () => {
       <Button handleClick={handleClickBad} text='bad' />
       <br />
       <Header textHeader="statistics" />
-      <Text text="good" number={good} />
-      <Text text="neutral" number={neutral} />
-      <Text text="bad" number={bad} />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </>
   )
