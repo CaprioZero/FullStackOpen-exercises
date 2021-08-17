@@ -12,11 +12,11 @@ const Button = ({ handleClick, text }) => (
 const StatisticLine = (props) => {
   if (props.text === "positive") {
     return (
-      <p>{props.text} {props.value} %</p>
+      <tr><td>{props.text}</td><td>{props.value} %</td></tr>
     )
   }
   return (
-    <p>{props.text} {props.value}</p>
+    <tr><td>{props.text}</td><td>{props.value}</td></tr>
   )
 }
 
@@ -33,12 +33,16 @@ const Statistics = ({ good, neutral, bad }) => {
   }
   return (
     <div>
-      <StatisticLine text="good" value={good} />
-      <StatisticLine text="neutral" value={neutral} />
-      <StatisticLine text="bad" value={bad} />
-      <StatisticLine text="all" value={total} />
-      <StatisticLine text="average" value={average} />
-      <StatisticLine text="positive" value={positive} />
+      <table>
+        <tbody>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={total} />
+          <StatisticLine text="average" value={average} />
+          <StatisticLine text="positive" value={positive} />
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -61,6 +65,20 @@ const App = () => {
   const handleClickBad = () => {
     setBad(bad + 1)
   }
+
+  //Alternative way to save clicks of each button to its own state with object spread syntax (...clicks)
+  // const [clicks, setClicks] = useState({
+  //   good: 0, neutral: 0, bad: 0
+  // })
+
+  // const handleClickGood = () =>
+  //   setClicks({...clicks, good: clicks.good + 1})
+
+  // const handleClickNeutral = () =>
+  //   setClicks({...clicks, neutral: clicks.neutral + 1})
+
+  // const handleClickBad = () =>
+  //   setClicks({...clicks, bad: clicks.bad + 1})
 
   return (
     <>
