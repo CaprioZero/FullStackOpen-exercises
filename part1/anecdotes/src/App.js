@@ -9,6 +9,15 @@ const Button = ({ handleClick, text }) => (
   </button>
 )
 
+// const Anecdote = ({ text, points = 0 }) => {
+//   return (
+//     <div>
+//       <p>{text}</p>
+//       <p>has {points} votes</p>
+//     </div>
+//   )
+// }
+
 const Anecdote = ({ text, points }) => {
   if (points === 0) {
     return (
