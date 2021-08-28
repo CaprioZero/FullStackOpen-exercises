@@ -31,10 +31,10 @@ const App = () => {
   }
 
   return (
-    <div>
+    <>
       <Filter value={newFilter} onChange={handleFilterChange} />
       <Countries newFilter={newFilter} countries={countries} setCountries={setCountries} />
-    </div>
+    </>
   )
 }
 export default App
