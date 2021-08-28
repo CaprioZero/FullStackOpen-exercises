@@ -6,7 +6,6 @@ import Countries from './components/Countries'
 const App = () => {
   const [countries, setCountries] = useState([])
   const [newFilter, setNewFilter] = useState('')
-  // const [filteredcountries, setFilteredCountries] = useState([])
 
   // axios.get('https://restcountries.eu/rest/v2/all').then(response => {
   //   console.log(response)
@@ -34,7 +33,7 @@ const App = () => {
   return (
     <div>
       <Filter value={newFilter} onChange={handleFilterChange} />
-      <Countries newFilter={newFilter} countries={countries} />
+      <Countries newFilter={newFilter} countries={countries} setCountries={setCountries} />
     </div>
   )
 }

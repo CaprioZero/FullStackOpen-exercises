@@ -1,7 +1,7 @@
 import React from 'react'
 import Detail from './Detail'
 
-const Countries = ({ newFilter, countries }) => {
+const Countries = ({ newFilter, countries, setCountries }) => {
   if (newFilter === '') {
     return (
       <p>Type in search box, remember that after typing the second char then the first one get search, 3rd char for the 2nd to be searched and subsequently.
@@ -16,7 +16,7 @@ const Countries = ({ newFilter, countries }) => {
     return (
       <ul>
         {countries.map(country =>
-          <li key={country.name}> {country.name}</li>
+          <li key={country.name}> {country.name}   <button onClick={() => setCountries([country])}>show</button></li>
         )}
       </ul>
     )
