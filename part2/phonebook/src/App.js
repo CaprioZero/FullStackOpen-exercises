@@ -44,7 +44,7 @@ const App = () => {
   const handleFilterChange = (event) => {
     // console.log(event.target.value)
     setNewFilter(event.target.value)
-    const regex = new RegExp(newFilter, 'i');
+    const regex = new RegExp(newFilter, 'gi')
     const filteredPersons = () => persons.filter(person => person.name.match(regex))
     setPersons(filteredPersons)
   }

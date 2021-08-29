@@ -24,7 +24,7 @@ const App = () => {
     // console.log(event.target.value)
     setNewFilter(event.target.value)
     // console.log(newFilter)
-    const regex = new RegExp(newFilter, 'i');
+    const regex = new RegExp(newFilter, 'gi')
     const filtered = () => countries.filter(country => country.name.match(regex))
     setCountries(filtered)
     //console.log(countries)
