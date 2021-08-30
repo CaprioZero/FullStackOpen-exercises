@@ -25,7 +25,20 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    persons.filter(person => person.name === newName).length > 0 ? alert(`${newName} is already added to phonebook`) :
+    const sameName = persons.find(n => n.name === newName)
+    const changedNumber = { ...sameName, number: newNumber }
+    if (persons.filter(person => person.name === newName).length > 0) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(sameName.id, changedNumber)
+          .then(updatedPersonList => {
+            console.log(`${updatedPersonList.name}'s number updated to ${updatedPersonList.number}`)
+            setPersons(persons.map(person => person.name === newName ? updatedPersonList : person))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+    } else {
       personService
         .create(personObject)
         .then(returnedPerson => {
@@ -33,6 +46,7 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+    }
     // setNewFilter('')
   }
 
