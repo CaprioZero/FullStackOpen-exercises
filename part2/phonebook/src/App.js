@@ -45,6 +45,18 @@ const App = () => {
               setMessage(null)
             }, 3000)
           })
+          .catch((error) => {
+            console.log(error)
+            setPersons(persons.filter(person => person.id !== changedNumber.id))
+            setNewName('')
+            setNewNumber('')
+            setMessage(
+              `Information of ${changedNumber.name} has already been removed from server`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
+          })
       }
     } else {
       personService
