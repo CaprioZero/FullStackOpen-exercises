@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -32,10 +34,16 @@ const App = () => {
         personService
           .update(sameName.id, changedNumber)
           .then(updatedPerson => {
-            console.log(`${updatedPerson.name}'s number updated to ${updatedPerson.number}`)
+            // console.log(`${updatedPerson.name}'s number updated to ${updatedPerson.number}`)
             setPersons(persons.map(person => person.name === newName ? updatedPerson : person))
             setNewName('')
             setNewNumber('')
+            setMessage(
+              `${updatedPerson.name}'s number updated to ${updatedPerson.number}`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
           })
       }
     } else {
@@ -45,6 +53,12 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setMessage(
+            `Added ${returnedPerson.name}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })
     }
     // setNewFilter('')
@@ -82,6 +96,8 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+      <Notification message={message} />
+      <br />
       <Filter value={newFilter} onChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
