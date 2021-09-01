@@ -3,7 +3,9 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny'))
+
+morgan.token('body', (req, res) => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
     {
@@ -67,7 +69,7 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    if (!body.name || !body.number  || body.name.length === 0 || body.number.length === 0) {
+    if (!body.name || !body.number || body.name.length === 0 || body.number.length === 0) {
         return response.status(400).json({
             error: 'Missing/Wrong name or number or both or empty content'
         })
