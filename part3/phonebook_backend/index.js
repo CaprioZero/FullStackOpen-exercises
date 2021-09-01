@@ -60,6 +60,24 @@ function getRandomIntInclusive(min, max) {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
+    if (request.get('content-type') !== 'application/json') {
+        return response.status(400).json({
+            error: 'Wrong or missing header type'
+        })
+    }
+
+    if (!body.name || !body.number  || body.name.length === 0 || body.number.length === 0) {
+        return response.status(400).json({
+            error: 'Missing/Wrong name or number or both or empty content'
+        })
+    }
+
+    if (persons.filter(person => person.name === body.name).length > 0) {
+        return response.status(400).json({
+            error: 'Name must be unique'
+        })
+    }
+
     const person = {
         id: getRandomIntInclusive(5, 1000000000),
         name: body.name,
