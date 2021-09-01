@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let persons = [
     {
@@ -30,8 +32,7 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    const currentDate = new Date();
-    response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${currentDate}</p>`)
+    response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
 })
 
 app.get('/api/persons/:id', (request, response) => {
