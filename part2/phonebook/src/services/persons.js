@@ -7,13 +7,18 @@ const getAll = () => {
 }
 
 const create = newObject => {
-    const request = axios.post(baseUrl, newObject)
+    const request = axios.post(baseUrl, newObject, {
+        data: null,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
     return request.then(response => response.data)
 }
 
 const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject)
-  return request.then(response => response.data)
+    const request = axios.put(`${baseUrl}/${id}`, newObject)
+    return request.then(response => response.data)
 }
 
 const remove = id => {
