@@ -27,20 +27,52 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-
-    personService
-      .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-        setMessage(
-          `Added ${returnedPerson.name}`
-        )
-        setTimeout(() => {
-          setMessage(null)
-        }, 3000)
-      })
+    const sameName = persons.find(person => person.name === newName)
+    const changedNumber = { ...sameName, number: newNumber }
+    if (persons.filter(person => person.name === newName).length > 0) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(sameName.id, changedNumber)
+          .then(updatedPerson => {
+            // console.log(`${updatedPerson.name}'s number updated to ${updatedPerson.number}`)
+            setPersons(persons.map(person => person.name === newName ? updatedPerson : person))
+            setNewName('')
+            setNewNumber('')
+            setMessage(
+              `${updatedPerson.name}'s number updated to ${updatedPerson.number}`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
+          })
+          .catch((error) => {
+            console.log(error)
+            setPersons(persons.filter(person => person.id !== changedNumber.id))
+            setNewName('')
+            setNewNumber('')
+            setMessage(
+              `Information of ${changedNumber.name} has already been removed from server`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
+          })
+      }
+    } else {
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setMessage(
+            `Added ${returnedPerson.name}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+        })
+    }
 
     // setNewFilter('')
   }
