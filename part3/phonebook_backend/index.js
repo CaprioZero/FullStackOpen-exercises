@@ -72,9 +72,11 @@ app.post('/api/persons', (request, response, next) => {
         number: body.number,
     })
 
-    person.save().then(savedPerson => {
-        response.json(savedPerson)
-    })
+    person.save()
+        .then(savedPerson => savedPerson.toJSON())
+        .then(savedAndFormattedPerson => {
+            response.json(savedAndFormattedPerson)
+        })
         .catch(error => next(error))
 })
 
@@ -86,11 +88,18 @@ app.put('/api/persons/:id', (request, response, next) => {
         number: body.number,
     }
 
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: 'query' })
         .then(updatedPerson => {
-            response.json(updatedPerson)
+            if (updatedPerson) {
+                response.json(updatedPerson)
+            } else {
+                response.status(404).end()
+            }
         })
-        .catch(error => next(error))
+        .catch(error => {
+            console.log("Problem. Look at console")
+            next(error)
+        })
 })
 
 const unknownEndpoint = (request, response) => {

@@ -45,17 +45,26 @@ const App = () => {
               setMessage(null)
             }, 3000)
           })
-          .catch((error) => {
-            console.log(error)
-            setPersons(persons.filter(person => person.id !== changedNumber.id))
-            setNewName('')
-            setNewNumber('')
-            setMessage(
-              `Information of ${changedNumber.name} has already been removed from server`
-            )
-            setTimeout(() => {
-              setMessage(null)
-            }, 3000)
+          .catch(function (error) {
+            if (error.response.status === Number('404')) {
+              setPersons(persons.filter(person => person.id !== changedNumber.id))
+              setNewName('')
+              setNewNumber('')
+              setMessage(
+                `failed: Information of ${changedNumber.name} has already been removed from server`
+              )
+              setTimeout(() => {
+                setMessage(null)
+              }, 3000)
+            } else if (error.response.status === Number('400')) {
+              console.log(error.response.data.error)
+              setMessage(
+                `${error.response.data.error}`
+              )
+              setTimeout(() => {
+                setMessage(null)
+              }, 3000)
+            }
           })
       }
     } else {
@@ -67,6 +76,15 @@ const App = () => {
           setNewNumber('')
           setMessage(
             `Added ${returnedPerson.name}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+        })
+        .catch(error => {
+          console.log(error.response.data.error)
+          setMessage(
+            `${error.response.data.error}`
           )
           setTimeout(() => {
             setMessage(null)
@@ -101,7 +119,13 @@ const App = () => {
         .remove(id)
         .then(
           console.log(`${name} deleted`),
-          setPersons(persons.filter(person => person.id !== id))
+          setPersons(persons.filter(person => person.id !== id)),
+          setMessage(
+            `${name} deleted`
+          ),
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         )
     }
   }

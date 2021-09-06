@@ -14,8 +14,8 @@ mongoose.connect(url)
     })
 
 const personSchema = new mongoose.Schema({
-    name: { type: String, required: true, unique: true },
-    number: { type: String, required: true },
+    name: { type: String, minLength: 5, required: true, unique: true },
+    number: { type: String, minLength: 8, required: true },
 })
 
 personSchema.plugin(uniqueValidator, { message: 'Expected `{PATH}` to be unique. Value `{VALUE}`' })
