@@ -1,4 +1,4 @@
-# Exercise 3.11 Heroku url
+# Part 3 Heroku url
 
 Open [https://shrouded-hollows-60803.herokuapp.com/](https://shrouded-hollows-60803.herokuapp.com/) to view the React app in the browser.
 
