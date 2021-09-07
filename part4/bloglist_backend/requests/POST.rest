@@ -1,0 +1,10 @@
+### create new blog post
+POST http://localhost:3003/api/blogs
+content-type: application/json
+
+{
+    "title": "Fullstackopen part 4",
+    "author": "mluukkai",
+    "url": "https://fullstackopen.com/en/part4",
+    "likes": 8
+}
