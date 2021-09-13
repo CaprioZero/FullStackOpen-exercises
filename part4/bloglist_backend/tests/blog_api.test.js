@@ -21,6 +21,12 @@ test('all blogs are returned as json', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 }, 100000)
 
+test('unique identifier property of the blog posts is named id and not _id', async () => {
+  const response = await api.get('/api/blogs')
+  // console.log(response.body)   list of blogs in initialBlogs doesn't get pass from top to bottom during beforeEach but in order of which arrive first so order is inconsistent
+  expect(response.body[0].id).toBeDefined()
+}, 100000)
+
 afterAll(() => {
   mongoose.connection.close()
 })
