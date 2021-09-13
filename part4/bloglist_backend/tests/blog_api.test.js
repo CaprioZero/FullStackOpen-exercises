@@ -27,6 +27,29 @@ test('unique identifier property of the blog posts is named id and not _id', asy
   expect(response.body[0].id).toBeDefined()
 }, 100000)
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 10
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const contents = blogsAtEnd.map(n => n.title)
+  expect(contents).toContain(
+    'First class tests'
+  )
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
