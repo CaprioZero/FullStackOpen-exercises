@@ -27,46 +27,62 @@ test('unique identifier property of the blog posts is named id and not _id', asy
   expect(response.body[0].id).toBeDefined()
 }, 100000)
 
-test('a valid blog can be added', async () => {
-  const newBlog = {
-    title: 'First class tests',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10
-  }
+describe('addition of a new blog', () => {
+  test('a valid blog can be added', async () => {
+    const newBlog = {
+      title: 'First class tests',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+      likes: 10
+    }
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
-  const blogsAtEnd = await helper.blogsInDb()
-  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-  const contents = blogsAtEnd.map(n => n.title)
-  expect(contents).toContain(
-    'First class tests'
-  )
-})
+    const contents = blogsAtEnd.map(n => n.title)
+    expect(contents).toContain('First class tests')
+  })
 
-test('if likes property missing from request default to 0', async () => {
-  const newBlog = {
-    title: 'TDD harms architecture',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html'
-  }
+  test('if likes property missing from request, default to 0', async () => {
+    const newBlog = {
+      title: 'TDD harms architecture',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html'
+    }
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
-  const blogsAtEnd = await helper.blogsInDb()
+    const blogsAtEnd = await helper.blogsInDb()
 
-  const contents = await blogsAtEnd.find(n => n.title === 'TDD harms architecture')
-  expect(contents.likes).toBe(0)
+    const contents = await blogsAtEnd.find(n => n.title === 'TDD harms architecture')
+    expect(contents.likes).toBe(0)
+  })
+
+  test('fails with status code 400 if data is invaild', async () => {
+    const newBlog = {
+      author: 'Robert C. Martin',
+      likes: 6
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
 })
 
 afterAll(() => {
