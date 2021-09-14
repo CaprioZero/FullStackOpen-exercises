@@ -56,13 +56,15 @@ describe('total likes', () => {
       const emptyList = listHelper.totalLikes([])
       expect(emptyList).toBe(0)
     })
+
     test('when list has only one blog, equals the likes of that', () => {
         const blog = ([]).concat(blogs[0])
         const oneBlog = listHelper.totalLikes(blog)  //.reduce can only work on array, not array like structure or object
         expect(oneBlog).toBe(7)
-      })
+    })
+
     test('of a bigger list is calculated right', () => {
         const biggerList = listHelper.totalLikes(blogs)
         expect(biggerList).toBe(36)
-      })
+    })
   })

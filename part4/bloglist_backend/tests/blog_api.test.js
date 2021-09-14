@@ -26,7 +26,47 @@ describe('inspect all initial blogs', () => {
     const response = await api.get('/api/blogs')
     // console.log(response.body)   list of blogs in initialBlogs doesn't get pass from top to bottom during beforeEach but in order of which arrive first so order is inconsistent
     expect(response.body[0].id).toBeDefined()
-  }, 100000)
+  })
+
+  test('check for a blog title in initial list', async () => {
+    const response = await api.get('/api/blogs')
+
+    const allTitles = response.body.map(n => n.title)
+    expect(allTitles).toContain('React patterns')
+  })
+})
+
+describe('viewing a specific blog', () => {
+  test('succeeds with status code 200 with valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    const result = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const processedBlogToView = JSON.parse(JSON.stringify(blogToView))
+    expect(result.body).toEqual(processedBlogToView)
+  })
+
+  test('fails with status code 404 if note does not exist', async () => {
+    const validNonexistingId = await helper.nonExistingId()
+
+    console.log('recently deleted blog\'s id is',validNonexistingId)
+
+    await api
+      .get(`/api/blogs/${validNonexistingId}`)
+      .expect(404)
+  })
+
+  test('fails with status code 400 id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api
+      .get(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
 })
 
 describe('addition of a new blog', () => {
@@ -65,7 +105,6 @@ describe('addition of a new blog', () => {
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
-
     const contents = await blogsAtEnd.find(n => n.title === 'TDD harms architecture')
     expect(contents.likes).toBe(0)
   })
@@ -82,7 +121,6 @@ describe('addition of a new blog', () => {
       .expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
-
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
   })
 })
@@ -97,11 +135,9 @@ describe('deletion of a blog', () => {
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
-
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
 
     const allTitles = blogsAtEnd.map(r => r.title)
-
     expect(allTitles).not.toContain(blogToDelete.title)
   })
 })
@@ -138,6 +174,7 @@ describe('update a blog', () => {
 
     const blogsAfterUpdate = await helper.blogsInDb()
     expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
+
     const updatedBlogData = blogsAfterUpdate.find(n => n.title === 'Updated type wars')
     expect(updatedBlogData.likes).toBe(3)
   })

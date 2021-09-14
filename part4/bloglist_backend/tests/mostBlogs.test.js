@@ -56,6 +56,7 @@ describe('most blogs', () => {
       const emptyList = listHelper.mostBlogs([])
       expect(emptyList).toEqual({})
     })
+
     test('when list has only one blog, equals that author', () => {
         const blog = ([]).concat(blogs[0])
         const oneBlog = listHelper.mostBlogs(blog)
@@ -63,12 +64,13 @@ describe('most blogs', () => {
           author: "Michael Chan",
           blogs: 1
         })
-      })
+    })
+
     test('of a bigger list is calculated right', () => {
         const biggerList = listHelper.mostBlogs(blogs)
         expect(biggerList).toEqual({
           author: "Robert C. Martin",
           blogs: 3
         })
-      })
+    })
   })

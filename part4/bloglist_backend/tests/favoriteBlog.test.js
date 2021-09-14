@@ -56,6 +56,7 @@ describe('favorite blog', () => {
       const emptyList = listHelper.favoriteBlog([])
       expect(emptyList).toEqual({})
     })
+
     test('when list has only one blog, equals that blog', () => {
         const blog = ([]).concat(blogs[0])
         const oneBlog = listHelper.favoriteBlog(blog)
@@ -64,7 +65,8 @@ describe('favorite blog', () => {
           author: "Michael Chan",
           likes: 7
         })
-      })
+    })
+
     test('of a bigger list is calculated right', () => {
         const biggerList = listHelper.favoriteBlog(blogs)
         expect(biggerList).toEqual({
@@ -72,5 +74,5 @@ describe('favorite blog', () => {
           author: "Edsger W. Dijkstra",
           likes: 12
         })
-      })
+    })
   })
