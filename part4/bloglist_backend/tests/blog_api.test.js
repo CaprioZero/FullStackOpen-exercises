@@ -15,17 +15,19 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-test('all blogs are returned as json', async () => {
-  const response = await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
+describe('inspect all initial blogs', () => {
+  test('all blogs are returned as json', async () => {
+    const response = await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
 
-  expect(response.body).toHaveLength(helper.initialBlogs.length)
-}, 100000)
+    expect(response.body).toHaveLength(helper.initialBlogs.length)
+  }, 100000)
 
-test('unique identifier property of the blog posts is named id and not _id', async () => {
-  const response = await api.get('/api/blogs')
-  // console.log(response.body)   list of blogs in initialBlogs doesn't get pass from top to bottom during beforeEach but in order of which arrive first so order is inconsistent
-  expect(response.body[0].id).toBeDefined()
-}, 100000)
+  test('unique identifier property of the blog posts is named id and not _id', async () => {
+    const response = await api.get('/api/blogs')
+    // console.log(response.body)   list of blogs in initialBlogs doesn't get pass from top to bottom during beforeEach but in order of which arrive first so order is inconsistent
+    expect(response.body[0].id).toBeDefined()
+  }, 100000)
+})
 
 describe('addition of a new blog', () => {
   test('a valid blog can be added', async () => {
@@ -82,6 +84,25 @@ describe('addition of a new blog', () => {
     const blogsAtEnd = await helper.blogsInDb()
 
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+})
+
+describe('deletion of a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+    const allTitles = blogsAtEnd.map(r => r.title)
+
+    expect(allTitles).not.toContain(blogToDelete.title)
   })
 })
 
