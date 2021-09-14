@@ -13,7 +13,7 @@ beforeEach(async () => {
     .map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
-})
+}, 150000)
 
 describe('inspect all initial blogs', () => {
   test('all blogs are returned as json', async () => {
@@ -103,6 +103,43 @@ describe('deletion of a blog', () => {
     const allTitles = blogsAtEnd.map(r => r.title)
 
     expect(allTitles).not.toContain(blogToDelete.title)
+  })
+})
+
+describe('update a blog', () => {
+  test('succeeds with status code 200 if id is valid', async () => {
+    const newBlog = {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const blogToUpdate = blogsAtEnd.find(n => n.title === newBlog.title)
+
+    const updatedBlog = {
+      ...blogToUpdate,
+      title: 'Updated type wars',
+      likes: blogToUpdate.likes + 1
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfterUpdate = await helper.blogsInDb()
+    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
+    const updatedBlogData = blogsAfterUpdate.find(n => n.title === 'Updated type wars')
+    expect(updatedBlogData.likes).toBe(3)
   })
 })
 

@@ -1,0 +1,9 @@
+### Update with all required field
+PUT http://localhost:3003/api/blogs/6137894442ce9b815a366b53
+content-type: application/json
+
+{
+    "title": "Updated full stack",
+    "url": "https://google.com",
+    "likes": 20
+}
