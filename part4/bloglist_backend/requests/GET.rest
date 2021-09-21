@@ -3,3 +3,6 @@ GET http://localhost:3003/api/blogs
 
 ### get a specific blog post
 GET http://localhost:3003/api/blogs/61378336e86bcab18bf87b5e
+
+### get all users
+GET http://localhost:3003/api/users

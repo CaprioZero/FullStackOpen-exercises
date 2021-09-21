@@ -8,3 +8,14 @@ content-type: application/json
     "url": "https://fullstackopen.com/en/part4",
     "likes": 8
 }
+
+### create new user
+POST http://localhost:3003/api/users
+content-type: application/json
+
+{
+    "username": "admin",
+    "password": "admin123",
+    "name": "root",
+    "blogs": []
+}
