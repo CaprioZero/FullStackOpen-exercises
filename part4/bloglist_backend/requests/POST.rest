@@ -3,10 +3,11 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-    "title": "Fullstackopen part 4",
+    "title": "test userId Fullstackopen part 5",
     "author": "mluukkai",
-    "url": "https://fullstackopen.com/en/part4",
-    "likes": 8
+    "url": "https://fullstackopen.com/en/part5",
+    "likes": 18,
+    "userId": "61498b3f3ca2c5fbfdf4cc62"
 }
 
 ### create new user
