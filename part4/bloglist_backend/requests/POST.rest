@@ -10,16 +10,16 @@ content-type: application/json
     "userId": "61498b3f3ca2c5fbfdf4cc62"
 }
 
-### create new blog post with auth token
+### create new blog post with auth token, comment out Authorization header to test error handling when token is invalid
 POST http://localhost:3003/api/blogs
-content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzIyNDY3MDksImV4cCI6MTYzMjI1MDMwOX0.Wd5iB3N-lYgpoLIIhQEzdF0JoZsU1fv7JIP5lDWC8P0
-//comment out Authorization header to test error handling when token is invalid
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzIzMjE5MjgsImV4cCI6MTYzMjMyNTUyOH0.8qw6k83oNz8uP1CrD3oD695H_IqCbVOpRVTPppqrGdE
+
 {
-    "title": "Test create blog with token",
+    "title": "Test create blog with token middleware",
     "author": "test",
-    "url": "https://fullstackopen.com/en/part6",
-    "likes": 21
+    "url": "https://youtube.com",
+    "likes": 1
 }
 
 ### create new user
