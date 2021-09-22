@@ -13,7 +13,7 @@ content-type: application/json
 ### create new blog post with auth token, comment out Authorization header to test error handling when token is invalid
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzIzMjE5MjgsImV4cCI6MTYzMjMyNTUyOH0.8qw6k83oNz8uP1CrD3oD695H_IqCbVOpRVTPppqrGdE
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzIzMjY2MDgsImV4cCI6MTYzMjMzMDIwOH0.F7AcG3_XrIgOHoB8eJICJ7ppvcDU3JHGxVwcEe24xWQ
 
 {
     "title": "Test create blog with token middleware",
