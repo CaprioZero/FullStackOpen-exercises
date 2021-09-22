@@ -1,9 +1,10 @@
 ### Update with all required field
-PUT http://localhost:3003/api/blogs/6137894442ce9b815a366b53
+PUT http://localhost:3003/api/blogs/614b541fa493bd2f5dd02413
 content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzIzNDI0NjgsImV4cCI6MTYzMjM0NjA2OH0.igXuSautRkw0K6oxJ6ewRA0Z2TXd9reyyO18ErXy_pc
 
 {
-    "title": "Updated full stack",
+    "title": "Updated blog with token authentication",
     "url": "https://google.com",
-    "likes": 20
+    "likes": 19
 }
