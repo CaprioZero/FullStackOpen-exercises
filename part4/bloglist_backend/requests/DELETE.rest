@@ -1,2 +1,6 @@
-###Delete a person
-DELETE http://localhost:3003/api/blogs/613792a0e8fbd32bc3211e80
+###Delete a user
+DELETE http://localhost:3003/api/users/61498b3f3ca2c5fbfdf4cc62
+
+###Delete a blog
+DELETE http://localhost:3003/api/blogs/614b4112437b88c0940bade1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzIzMjUxNjksImV4cCI6MTYzMjMyODc2OX0.Gveu8taKxZ7bOQBu3aSOFn8jPR-k2TsC8w_gmqX26tE
