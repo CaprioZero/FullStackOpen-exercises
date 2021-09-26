@@ -1,9 +1,11 @@
 import React , { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, setUpdateState }) => {
+const Blog = ({ blog, setUpdateState, user, blogToDelete }) => {
   const [visible, setVisible] = useState(false)
   const showWhenVisible = { display: visible ? '' : 'none' }
+  const [removeVisible, setRemoveVisible] = useState(false)
+  const hideIfNotCreator = { display: removeVisible ? 'none' : '' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -15,6 +17,9 @@ const Blog = ({ blog, setUpdateState }) => {
 
   const toggleVisibility = () => {
     setVisible(!visible)
+    if (blog.user.username !== user.username) {
+      setRemoveVisible(true)
+    }
   }
 
   const buttonLabel = visible ? 'Hide' : 'View'
@@ -23,8 +28,11 @@ const Blog = ({ blog, setUpdateState }) => {
     event.preventDefault()
     const newLikes = blog.likes + 1
     const updatedBlog = { ...blog, likes: newLikes }
-    setUpdateState(await blogService.update(blog.id, updatedBlog))
+    const userToken = user.token
+    setUpdateState(await blogService.update(blog.id, updatedBlog, userToken))
   }
+
+  const removeSelectedBlog = () => blogToDelete(blog)
 
   return (
     <div style={blogStyle}>
@@ -35,6 +43,10 @@ const Blog = ({ blog, setUpdateState }) => {
         <p>Url: {blog.url}</p>
         <p>Likes: {blog.likes}{'\u00A0'}<button onClick={likeIncrement}>Like</button></p>
         <p>Poster's name: {blog.user.name}</p>
+        {/*Poster's name doesn't show up when first creating note because of state hooks doesn't rerender if pass the same value/object to it,
+        as mentioned in https://github.com/facebook/react/issues/15595 so normally we need to reload page or update likes for it to show up,
+        but in this project, i fix it by remove setBlogs(blogs.concat(addBlog)) in function addBlog in App.js and insert updateState check*/}
+        <div style={hideIfNotCreator}><button onClick={removeSelectedBlog}>Delete</button></div>
       </div>
     </div>
   )

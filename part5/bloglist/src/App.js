@@ -21,7 +21,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [updateState])
 
   useEffect(() => {
@@ -66,10 +66,9 @@ const App = () => {
   const addBlog = async (blogData) => {
     try {
       blogFormRef.current.toggleVisibility()
-
-      const addBlog = await blogService
-        .create(blogData)
-      setBlogs(blogs.concat(addBlog))
+      const userToken = user.token
+      setUpdateState(await blogService
+        .create(blogData, userToken))
       setMessage(
         `A new blog "${blogData.title}" by "${blogData.author}" added`
       )
@@ -81,6 +80,33 @@ const App = () => {
     } catch (exception) {
       setErrorMessage(
         `Something went wrong, can't add "${blogData.title}"`
+      )
+      setMessage(null)
+      setTimeout(() => {
+        setMessage(null)
+        setErrorMessage(null)
+      }, 3000)
+    }
+  }
+
+  const deleteBlog = async (blogData) => {
+    try {
+      if (window.confirm(`Remove blog "${blogData.title}" by "${blogData.author}"?`)) {
+        const userToken = user.token
+        setUpdateState(await blogService
+          .remove(blogData.id, userToken))
+        setMessage(
+          `Blog "${blogData.title}" delete successfully`
+        )
+        setErrorMessage(null)
+        setTimeout(() => {
+          setMessage(null)
+          setErrorMessage(null)
+        }, 3000)
+      }
+    } catch (exception) {
+      setErrorMessage(
+        `Something went wrong, can't delete "${blogData.title}", maybe you're not the creator of it`
       )
       setMessage(null)
       setTimeout(() => {
@@ -112,7 +138,7 @@ const App = () => {
           <BlogForm blogData={addBlog} />
         </Togglable>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-         <Blog key={blog.id} blog={blog} setUpdateState={setUpdateState} />
+         <Blog key={blog.id} blog={blog} setUpdateState={setUpdateState} user={user} blogToDelete={deleteBlog}/>
         )}
       </>
       }
