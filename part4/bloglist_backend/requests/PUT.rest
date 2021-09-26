@@ -1,10 +1,21 @@
-### Update with all required field
+### user who create the blog can update title, url and likes
 PUT http://localhost:3003/api/blogs/614b541fa493bd2f5dd02413
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzIzNDI0NjgsImV4cCI6MTYzMjM0NjA2OH0.igXuSautRkw0K6oxJ6ewRA0Z2TXd9reyyO18ErXy_pc
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MTQ5OGIxNzNjYTJjNWZiZmRmNGNjNjAiLCJpYXQiOjE2MzI2Mjc0OTgsImV4cCI6MTYzMjYzMTA5OH0.eZACSeIkWLqXcycyrAJXUfPnF0UuaKhzuQHEzjP_Tn8
 
 {
-    "title": "Updated blog with token authentication",
+    "title": "Updated blog with token authentication, right user",
     "url": "https://google.com",
-    "likes": 19
+    "likes": 0
+}
+
+### user who doesn't create blog can only update likes even if they supply title and url info
+PUT http://localhost:3003/api/blogs/614b541fa493bd2f5dd02413
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjYxNDk4YjNmM2NhMmM1ZmJmZGY0Y2M2MiIsImlhdCI6MTYzMjYyNzAwOSwiZXhwIjoxNjMyNjMwNjA5fQ.TNdfxIIDlvKh1vzMHnXAov131yMa7t2H6gwRFA6hpGk
+
+{
+    "title": "Updated blog with token authentication, wrong user",
+    "url": "https://google1.com",
+    "likes": 99
 }

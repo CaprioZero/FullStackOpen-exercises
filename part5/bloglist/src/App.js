@@ -14,6 +14,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [updateState, setUpdateState] = useState(null)
 
   const blogFormRef = useRef()
 
@@ -21,7 +22,7 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [])
+  }, [updateState])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('blogUsersInformation')
@@ -111,7 +112,7 @@ const App = () => {
           <BlogForm blogData={addBlog} />
         </Togglable>
         {blogs.map(blog =>
-         <Blog key={blog.id} blog={blog} />
+         <Blog key={blog.id} blog={blog} setUpdateState={setUpdateState} />
         )}
       </>
       }
