@@ -1,7 +1,6 @@
 import React , { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, setUpdateState, user, blogToDelete }) => {
+const Blog = ({ blog, blogToUpdate, user, blogToDelete }) => {
   const [visible, setVisible] = useState(false)
   const showWhenVisible = { display: visible ? '' : 'none' }
   const [removeVisible, setRemoveVisible] = useState(false)
@@ -24,14 +23,7 @@ const Blog = ({ blog, setUpdateState, user, blogToDelete }) => {
 
   const buttonLabel = visible ? 'Hide' : 'View'
 
-  const likeIncrement = async (event) => {
-    event.preventDefault()
-    const newLikes = blog.likes + 1
-    const updatedBlog = { ...blog, likes: newLikes }
-    const userToken = user.token
-    setUpdateState(await blogService.update(blog.id, updatedBlog, userToken))
-  }
-
+  const updateSelectedBlog = () => blogToUpdate(blog)
   const removeSelectedBlog = () => blogToDelete(blog)
 
   return (
@@ -41,7 +33,7 @@ const Blog = ({ blog, setUpdateState, user, blogToDelete }) => {
       </div>
       <div style={showWhenVisible}>
         <p>Url: {blog.url}</p>
-        <p>Likes: {blog.likes}{'\u00A0'}<button onClick={likeIncrement}>Like</button></p>
+        <p>Likes: {blog.likes}{'\u00A0'}<button onClick={updateSelectedBlog}>Like</button></p>
         <p>Poster's name: {blog.user.name}</p>
         {/*Poster's name doesn't show up when first creating note because of state hooks doesn't rerender if pass the same value/object to it,
         as mentioned in https://github.com/facebook/react/issues/15595 so normally we need to reload page or update likes for it to show up,

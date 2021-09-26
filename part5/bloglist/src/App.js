@@ -89,6 +89,25 @@ const App = () => {
     }
   }
 
+  const updateLikes = async (blogData) => {
+    try {
+      const newLikes = blogData.likes + 1
+      const updatedBlog = { ...blogData, likes: newLikes }
+      const userToken = user.token
+      setUpdateState(await blogService.update(blogData.id, updatedBlog, userToken))
+    } catch (exception) {
+      setBlogs(blogs.filter(blog => blog.id !== blogData.id))
+      setErrorMessage(
+        `Information of "${blogData.title}" has already been removed from server`
+      )
+      setMessage(null)
+      setTimeout(() => {
+        setMessage(null)
+        setErrorMessage(null)
+      }, 3000)  
+    }
+  }
+
   const deleteBlog = async (blogData) => {
     try {
       if (window.confirm(`Remove blog "${blogData.title}" by "${blogData.author}"?`)) {
@@ -150,7 +169,7 @@ const App = () => {
           <BlogForm blogData={addBlog} />
         </Togglable>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-         <Blog key={blog.id} blog={blog} setUpdateState={setUpdateState} user={user} blogToDelete={deleteBlog}/>
+         <Blog key={blog.id} blog={blog} blogToUpdate={updateLikes} user={user} blogToDelete={deleteBlog}/>
         )}
       </>
       }
