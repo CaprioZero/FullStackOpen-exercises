@@ -111,7 +111,7 @@ const App = () => {
         <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
           <BlogForm blogData={addBlog} />
         </Togglable>
-        {blogs.map(blog =>
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
          <Blog key={blog.id} blog={blog} setUpdateState={setUpdateState} />
         )}
       </>
