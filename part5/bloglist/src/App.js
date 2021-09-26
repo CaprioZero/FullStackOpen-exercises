@@ -105,14 +105,26 @@ const App = () => {
         }, 3000)
       }
     } catch (exception) {
-      setErrorMessage(
-        `Something went wrong, can't delete "${blogData.title}", maybe you're not the creator of it`
-      )
-      setMessage(null)
-      setTimeout(() => {
+      if (exception.response.status === Number('401')) {
+        setErrorMessage(
+          `Something went wrong, can't delete "${blogData.title}", maybe you're not the creator of it`
+        )
         setMessage(null)
-        setErrorMessage(null)
-      }, 3000)
+        setTimeout(() => {
+          setMessage(null)
+          setErrorMessage(null)
+        }, 3000)
+      } else {
+        setBlogs(blogs.filter(blog => blog.id !== blogData.id))
+        setErrorMessage(
+          `Information of "${blogData.title}" has already been removed from server`
+        )
+        setMessage(null)
+        setTimeout(() => {
+          setMessage(null)
+          setErrorMessage(null)
+        }, 3000)
+      }
     }
   }
 
