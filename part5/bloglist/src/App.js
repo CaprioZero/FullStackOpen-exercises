@@ -9,7 +9,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
@@ -47,7 +47,7 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       setErrorMessage(
-        `Wrong username or password`
+        'Wrong username or password'
       )
       setMessage(null)
       setTimeout(() => {
@@ -104,7 +104,7 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
         setErrorMessage(null)
-      }, 3000)  
+      }, 3000)
     }
   }
 
@@ -150,28 +150,28 @@ const App = () => {
   return (
     <>
       {user === null ?
-      <>
-        <h2>Log in to application</h2>
-        <Notification message={message} errorMessage={errorMessage} />
-        <LoginForm
+        <>
+          <h2>Log in to application</h2>
+          <Notification message={message} errorMessage={errorMessage} />
+          <LoginForm
             handleLogin={handleLogin}
             username={username}
             handleUsernameChange={({ target }) => setUsername(target.value)}
             password={password}
             handlePasswordChange={({ target }) => setPassword(target.value)}
-        />
-      </> :
-      <>
-        <h2>Blogs</h2>
-        <Notification message={message} errorMessage={errorMessage} />
-        <p>{user.name} logged in{'\u00A0'}<button onClick={handleLogout} type="submit">Logout</button></p>
-        <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
-          <BlogForm blogData={addBlog} />
-        </Togglable>
-        {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-         <Blog key={blog.id} blog={blog} blogToUpdate={updateLikes} user={user} blogToDelete={deleteBlog}/>
-        )}
-      </>
+          />
+        </> :
+        <>
+          <h2>Blogs</h2>
+          <Notification message={message} errorMessage={errorMessage} />
+          <p>{user.name} logged in{'\u00A0'}<button onClick={handleLogout} type="submit">Logout</button></p>
+          <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
+            <BlogForm blogData={addBlog} />
+          </Togglable>
+          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+            <Blog key={blog.id} blog={blog} blogToUpdate={updateLikes} user={user} blogToDelete={deleteBlog}/>
+          )}
+        </>
       }
     </>
   )

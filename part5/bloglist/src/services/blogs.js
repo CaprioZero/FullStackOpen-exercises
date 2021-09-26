@@ -1,7 +1,6 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
 
-// eslint-disable-next-line no-unused-vars
 let token = null
 
 const setToken = newToken => {
@@ -46,5 +45,5 @@ const remove = async (id, userToken) => {
   return response.data
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
+// eslint-disable-next-line
 export default { getAll, create, update, remove, setToken }
