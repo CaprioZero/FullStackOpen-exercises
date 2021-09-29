@@ -1,9 +1,10 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
-test('renders blog\'s title and author', () => {
+describe('Blog component testing', () => {
+  let component
   const blogToUpdate = jest.fn()
   const blogToDelete = jest.fn()
 
@@ -24,11 +25,30 @@ test('renders blog\'s title and author', () => {
     }
   }
 
-  const component = render(
-    <Blog blog={blog} blogToUpdate={blogToUpdate} user={user} blogToDelete={blogToDelete} />
-  )
+  beforeEach(() => {
+    component = render(
+      <Blog blog={blog} blogToUpdate={blogToUpdate} user={user} blogToDelete={blogToDelete} />
+    )
+  })
 
-  expect(component.container).toHaveTextContent(
-    '"Component testing is done with react-testing-library" by "mluukkai"'
-  )
+  test('renders blog\'s title and author', () => {
+
+    expect(component.container).toHaveTextContent(
+      '"Component testing is done with react-testing-library" by "mluukkai"'
+    )
+  })
+
+  test('blog\'s url and number of likes are shown when click view', () => {
+
+    const button = component.getByText('View')
+    fireEvent.click(button)
+
+    expect(component.container).toHaveTextContent(
+      'https://fullstackopen.com/en/part5'
+    )
+
+    expect(component.container).toHaveTextContent(
+      '18'
+    )
+  })
 })
