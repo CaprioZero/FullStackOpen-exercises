@@ -28,7 +28,7 @@ const Blog = ({ blog, blogToUpdate, user, blogToDelete }) => {
   const removeSelectedBlog = () => blogToDelete(blog)
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div>
         <p>"{blog.title}" by "{blog.author}"{'\u00A0'}<button onClick={toggleVisibility}>{buttonLabel}</button></p>
       </div>
