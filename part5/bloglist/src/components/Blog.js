@@ -39,7 +39,7 @@ const Blog = ({ blog, blogToUpdate, user, blogToDelete }) => {
         {/*Poster's name doesn't show up when first creating note because of state hooks doesn't rerender if pass the same value/object to it,
         as mentioned in https://github.com/facebook/react/issues/15595 so normally we need to reload page or update likes for it to show up,
         but in this project, i fix it by remove setBlogs(blogs.concat(addBlog)) in function addBlog in App.js and insert updateState check*/}
-        <div style={hideIfNotCreator}><button onClick={removeSelectedBlog}>Delete</button></div>
+        <div style={hideIfNotCreator}><button id='delete-button' onClick={removeSelectedBlog}>Delete</button></div>
       </div>
     </div>
   )

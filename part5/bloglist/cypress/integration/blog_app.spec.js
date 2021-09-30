@@ -6,7 +6,13 @@ describe('Blog app', function() {
       password: 'test123',
       name: 'root'
     }
+    const user2 = {
+      username: 'person',
+      password: 'person123',
+      name: 'user'
+    }
     cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.request('POST', 'http://localhost:3003/api/users/', user2)
     cy.visit('http://localhost:3000')
   })
 
@@ -62,6 +68,29 @@ describe('Blog app', function() {
         cy.contains('like test').contains('View').click()
         cy.get('button[id="like-button"]').click()
         cy.contains('Likes: 1')
+      })
+
+      it('users who create the blog can delete it', function () {
+        cy.contains('like test').contains('View').click()
+        cy.get('button[id="delete-button"]').click()
+
+        cy.get('.success')
+          .should('contain', 'Blog "like test" delete successfully')
+          .and('have.css', 'color', 'rgb(0, 128, 0)')
+          .and('have.css', 'border-style', 'solid')
+
+        cy.get('html').should('not.contain', 'like test')
+      })
+      describe('users who doesn\'t create the blog can\'t delete it', function () {
+        beforeEach(function () {
+          cy.get('button[id="logout-button"]').click()
+          cy.login({ username: 'person', password: 'person123' })
+        })
+
+        it('check delete button doesn\'t exist', function () {
+          cy.contains('like test').contains('View').click()
+          cy.get('html').should('not.have.id', 'logout-button')
+        })
       })
     })
   })
