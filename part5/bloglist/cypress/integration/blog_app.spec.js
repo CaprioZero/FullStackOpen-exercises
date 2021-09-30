@@ -2,8 +2,8 @@ describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     const user = {
-      username: 'admin',
-      password: 'admin123',
+      username: 'test',
+      password: 'test123',
       name: 'root'
     }
     cy.request('POST', 'http://localhost:3003/api/users/', user)
@@ -18,15 +18,15 @@ describe('Blog app', function() {
 
   describe('Login',function() {
     it('succeeds with correct credentials', function() {
-      cy.get('#username').type('admin')
-      cy.get('#password').type('admin123')
+      cy.get('#username').type('test')
+      cy.get('#password').type('test123')
       cy.get('#login-button').click()
 
       cy.contains('root logged in')
     })
 
     it('fails with wrong credentials', function() {
-      cy.get('#username').type('admin')
+      cy.get('#username').type('test')
       cy.get('#password').type('wrong')
       cy.get('#login-button').click()
 
@@ -36,6 +36,21 @@ describe('Blog app', function() {
         .and('have.css', 'border-style', 'solid')
 
       cy.get('html').should('not.contain', 'root logged in')
+    })
+  })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'test', password: 'test123' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('Create new blog').click()
+      cy.get('#title').type('Ex 5.19')
+      cy.get('#author').type('root')
+      cy.get('#url').type('https://google.com')
+      cy.get('button[id="blog-submit"]').click()
+      cy.contains('Ex 5.19')
     })
   })
 })
