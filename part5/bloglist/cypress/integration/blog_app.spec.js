@@ -52,5 +52,17 @@ describe('Blog app', function() {
       cy.get('button[id="blog-submit"]').click()
       cy.contains('Ex 5.19')
     })
+
+    describe('and a blog already exists', function () {
+      beforeEach(function () {
+        cy.createBlog({ title: 'like test', author: 'test', url: 'https://google.com' })
+      })
+
+      it('users can like a blog', function () {
+        cy.contains('like test').contains('View').click()
+        cy.get('button[id="like-button"]').click()
+        cy.contains('Likes: 1')
+      })
+    })
   })
 })

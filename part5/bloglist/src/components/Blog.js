@@ -34,7 +34,7 @@ const Blog = ({ blog, blogToUpdate, user, blogToDelete }) => {
       </div>
       <div style={showWhenVisible}>
         <p>Url: {blog.url}</p>
-        <p>Likes: {blog.likes}{'\u00A0'}<button onClick={updateSelectedBlog}>Like</button></p>
+        <p>Likes: {blog.likes}{'\u00A0'}<button id='like-button' onClick={updateSelectedBlog}>Like</button></p>
         <p>Poster's name: {blog.user.name}</p>
         {/*Poster's name doesn't show up when first creating note because of state hooks doesn't rerender if pass the same value/object to it,
         as mentioned in https://github.com/facebook/react/issues/15595 so normally we need to reload page or update likes for it to show up,
