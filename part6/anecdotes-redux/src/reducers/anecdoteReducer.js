@@ -24,6 +24,8 @@ const anecdoteReducer = (state = initialState, action) => {
 //   console.log('action', action)
 
   switch(action.type) {
+    case 'NEW_ANECDOTE':
+        return [...state, action.data]
     case 'VOTE':
       const id = action.data.id
       const anecdoteToChange = state.find(n => n.id === id)
@@ -40,10 +42,21 @@ const anecdoteReducer = (state = initialState, action) => {
 }
 
 export const vote = (id) => {
-    return {
-      type: 'VOTE',
-      data: { id }
+  return {
+    type: 'VOTE',
+    data: { id }
+  }
+}
+  
+export const createAnecdote = (content) => {
+  return {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content,
+      id: getId(),
+      votes: 0
     }
+  }
 }
 
 export default anecdoteReducer
