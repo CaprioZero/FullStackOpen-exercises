@@ -21,15 +21,15 @@ const Anecdotes = () => {
   const anecdotes = useSelector(state => state)
 
   return (
-      anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
-        <Anecdote
-          key={anecdote.id}
-          anecdote={anecdote}
-          handleClick={() =>
-            dispatch(vote(anecdote.id))
-          }
-        />
-      )
+    anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
+      <Anecdote
+        key={anecdote.id}
+        anecdote={anecdote}
+        handleClick={() =>
+          dispatch(vote(anecdote.id))
+        }
+      />
+    )
   )
 }
 
