@@ -28,7 +28,14 @@ const Anecdote = ({ anecdote }) => {
 }
 
 const Anecdotes = () => {
-  const anecdotes = useSelector(state => state.anecdotes)
+  const anecdotes = useSelector(({ anecdotes, filter }) => {
+    if (filter === null) {
+      return anecdotes
+    } else {
+      const regex = new RegExp(filter, 'gi')
+      return anecdotes.filter(anecdote => anecdote.content.match(regex))
+    }
+  })
 
   return (
     anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
