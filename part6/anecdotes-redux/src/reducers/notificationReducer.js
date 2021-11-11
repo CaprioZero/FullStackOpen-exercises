@@ -3,25 +3,26 @@ const notificationReducer = (state = null, action) => {
     case 'CREATE_NOTIFICATION':
       return action.notification
     case 'DELETE_NOTIFICATION':
-      return null
+      return action.notification
     default:
       return state
   }
 }
 
-export const createNotification = (notification) => {
-  return {
-    type: 'CREATE_NOTIFICATION',
-    notification,
+export const setNotification = (notification, displayTime) => {
+  return async dispatch => {
+    dispatch({
+      type: 'CREATE_NOTIFICATION',
+      notification,
+    })
+
+    setTimeout(() => {
+      dispatch({
+        type: 'DELETE_NOTIFICATION',
+        notification: null
+      })
+    }, displayTime * 1000)
   }
 }
-
-// Can't chain action creator yet because of error "Actions must be plain objects. Use custom middleware for async actions", need thunk
-// export const deleteNotification = () => {
-//   return {
-//     type: 'DELETE_NOTIFICATION',
-//     notification: null,
-//   }
-// }
 
 export default notificationReducer
