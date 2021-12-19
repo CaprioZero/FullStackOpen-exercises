@@ -3,7 +3,8 @@ import {
   Routes,
   Route,
   Link,
-  useMatch
+  useMatch,
+  useNavigate
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -34,12 +35,13 @@ const AnecdoteList = ({ anecdotes }) => {
   )
 }
 
-const Anecdote = ({ anecdote }) => {
+const Anecdote = ({ anecdote, voteFunc }) => {
   return (
     <div>
       <h2>"{anecdote.content}" by "{anecdote.author}"</h2>
       <div>Has {anecdote.votes} vote(s)</div>
       <div>For more info see {anecdote.info}</div>
+      <button onClick={() => voteFunc(anecdote.id)}>Vote</button>
     </div>
   )
 }
@@ -70,7 +72,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -80,6 +82,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -105,6 +108,28 @@ const CreateNew = (props) => {
 
 }
 
+const Notification = ({ notification }) => {
+  const style = {
+    "color": "green",
+    "background": "lightgrey",
+    "fontSize": "20px",
+    "borderStyle": "solid",
+    "borderRadius": "5px",
+    "padding": "10px",
+    "margin": "10px"
+  }
+
+  if (notification === null) {
+    return null
+  } else if (notification) {
+    return (
+      <div style={style}>
+        {notification}
+      </div>
+    )
+  }
+}
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -123,11 +148,19 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+
+    if (window.timeOutId) {
+      window.clearTimeout(window.timeOutId)
+    }
+    setNotification(`"${anecdote.content}" added successfully`)
+    window.timeOutId = setTimeout(() => {
+      setNotification(null)
+    }, 10000)
   }
 
   const anecdoteById = (id) =>
@@ -142,6 +175,14 @@ const App = () => {
     }
 
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
+
+    if (window.timeOutId) {
+      window.clearTimeout(window.timeOutId)
+    }
+    setNotification(`You voted for "${anecdote.content}" successfully`)
+    window.timeOutId = setTimeout(() => {
+      setNotification(null)
+    }, 3000)
   }
 
   const match = useMatch('/anecdotes/:id')
@@ -155,8 +196,8 @@ const App = () => {
       <Menu />
 
       <Routes>
-        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-        <Route path="anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
+        <Route path="/" element={<><Notification notification={notification} /><AnecdoteList anecdotes={anecdotes} /></>} />
+        <Route path="anecdotes/:id" element={<><Notification notification={notification} /><Anecdote anecdote={anecdote} voteFunc={vote} /></>} />
         <Route path="about" element={<About />} />
         <Route path="create" element={<CreateNew addNew={addNew} />} />
         <Route
