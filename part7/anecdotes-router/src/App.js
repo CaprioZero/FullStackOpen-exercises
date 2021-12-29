@@ -6,6 +6,7 @@ import {
   useMatch,
   useNavigate
 } from 'react-router-dom'
+import  { useField } from './hooks/index'
 
 const Menu = () => {
   const padding = {
@@ -69,17 +70,17 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const contentHook = useField('content')
+  const authorHook = useField('author')
+  const infoHook = useField('info')
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: contentHook.value,
+      author: authorHook.value,
+      info: infoHook.value,
       votes: 0
     })
     navigate('/')
@@ -91,15 +92,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...contentHook} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...authorHook} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...infoHook} />
         </div>
         <button>create</button>
       </form>
