@@ -6,7 +6,7 @@ import {
   useMatch,
   useNavigate
 } from 'react-router-dom'
-import  { useField } from './hooks/index'
+import { useField } from './hooks/index'
 
 const Menu = () => {
   const padding = {
@@ -86,6 +86,13 @@ const CreateNew = (props) => {
     navigate('/')
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    contentHook.reset()
+    authorHook.reset()
+    infoHook.reset()
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -102,7 +109,7 @@ const CreateNew = (props) => {
           url for more info
           <input {...infoHook} />
         </div>
-        <button>create</button>
+        <button>create</button>{'\u00A0'}<button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
