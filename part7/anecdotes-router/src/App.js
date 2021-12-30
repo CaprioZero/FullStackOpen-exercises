@@ -109,7 +109,7 @@ const CreateNew = (props) => {
           url for more info
           <input {...infoHook} />
         </div>
-        <button>create</button>{'\u00A0'}<button onClick={handleReset}>reset</button>
+        <button type='submit'>create</button>{'\u00A0'}<button type='reset' onClick={handleReset}>reset</button>
       </form>
     </div>
   )
