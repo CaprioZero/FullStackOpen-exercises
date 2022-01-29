@@ -1,21 +1,32 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({ blogData }) => {
-  const [newTitle, setNewTitle ] = useState('')
-  const [newAuthor, setNewAuthor ] = useState('')
-  const [newUrl, setNewUrl ] = useState('')
+const BlogForm = ({ token, setUpdateState }) => {
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
 
-  const addBlog = (event) => {
+  const dispatch = useDispatch()
+
+  const addBlog = async (event) => {
     event.preventDefault()
-    blogData({
+    const blogData = {
       title: newTitle,
       author: newAuthor,
       url: newUrl
-    })
+    }
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
+    try {
+      setUpdateState(dispatch(createBlog(blogData, token)))
+      dispatch(setNotification(`A new blog "${blogData.title}" by "${blogData.author}" added`, 'success', 3))
+    } catch (exception) {
+      dispatch(setNotification(`Something went wrong, can't add "${blogData.title}"`, 'error', 3))
+    }
   }
 
   const handleTitleChange = (event) => {
@@ -52,7 +63,7 @@ const BlogForm = ({ blogData }) => {
 }
 
 BlogForm.propTypes = {
-  blogData: PropTypes.func.isRequired
+  token: PropTypes.string.isRequired
 }
 
 export default BlogForm

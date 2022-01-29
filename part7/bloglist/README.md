@@ -16,3 +16,9 @@ Run command `cd client` and then `npm start` to run React frontend in the 'clien
 # Sample account:
 
 admin/admin123
+
+# Note:
+
+As of January 2022, mongoose-unique-validator@3.0.0 contain false error "User validation failed: _id: Error, expected `_id` to be unique"
+View [this](https://github.com/FullStack-HY/part3-notes-backend/issues/7) and [this](https://github.com/blakehaswell/mongoose-unique-validator/issues/131)
+Revert back to 2.0.3 for temporary fix with this command `npm install mongoose-unique-validator@2.0.3 --legacy-peer-deps`

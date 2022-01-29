@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
@@ -8,22 +8,22 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const blogs = useSelector(state => state.blogs)
   const [updateState, setUpdateState] = useState(null)
 
   const dispatch = useDispatch()
   const blogFormRef = useRef()
 
+  {/*Because react usestate doesn't update state immediately due to it being async action so need to use useEffect to update each time value change*/}
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [updateState])
+    dispatch(initializeBlogs())
+  }, [dispatch, updateState])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('blogUsersInformation')
@@ -57,48 +57,6 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (blogData) => {
-    try {
-      blogFormRef.current.toggleVisibility()
-      const userToken = user.token
-      setUpdateState(await blogService
-        .create(blogData, userToken))
-      dispatch(setNotification(`A new blog "${blogData.title}" by "${blogData.author}" added`, 'success', 3))
-    } catch (exception) {
-      dispatch(setNotification(`Something went wrong, can't add "${blogData.title}"`, 'error', 3))
-    }
-  }
-
-  const updateLikes = async (blogData) => {
-    try {
-      const newLikes = blogData.likes + 1
-      const updatedBlog = { ...blogData, likes: newLikes }
-      const userToken = user.token
-      setUpdateState(await blogService.update(blogData.id, updatedBlog, userToken))
-    } catch (exception) {
-      setBlogs(blogs.filter(blog => blog.id !== blogData.id))
-      dispatch(setNotification(`Information of "${blogData.title}" has already been removed from server`, 'error', 3))
-    }
-  }
-
-  const deleteBlog = async (blogData) => {
-    try {
-      if (window.confirm(`Remove blog "${blogData.title}" by "${blogData.author}"?`)) {
-        const userToken = user.token
-        setUpdateState(await blogService
-          .remove(blogData.id, userToken))
-        dispatch(setNotification(`Blog "${blogData.title}" delete successfully`, 'success', 3))
-      }
-    } catch (exception) {
-      if (exception.response.status === Number('401')) {
-        dispatch(setNotification(`Something went wrong, can't delete "${blogData.title}", maybe you're not the creator of it`, 'error', 3))
-      } else {
-        setBlogs(blogs.filter(blog => blog.id !== blogData.id))
-        dispatch(setNotification(`Information of "${blogData.title}" has already been removed from server`, 'error', 3))
-      }
-    }
-  }
-
   return (
     <>
       {user === null ?
@@ -118,10 +76,10 @@ const App = () => {
           <Notification />
           <p>{user.name} logged in{'\u00A0'}<button id='logout-button' onClick={handleLogout} type="submit">Logout</button></p>
           <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
-            <BlogForm blogData={addBlog} />
+            <BlogForm token={user.token} setUpdateState={setUpdateState} />
           </Togglable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} blogToUpdate={updateLikes} user={user} blogToDelete={deleteBlog} />
+            <Blog key={blog.id} singleBlog={blog} user={user} setUpdateState={setUpdateState} />
           )}
         </>
       }
