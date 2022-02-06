@@ -51,7 +51,7 @@ const Blog = ({ singleBlog, user, setUpdateState }) => {
       }
     }
   }
-  console.log(singleBlog.user.name)
+
   return (
     <div style={blogStyle} className='blog'>
       <div>

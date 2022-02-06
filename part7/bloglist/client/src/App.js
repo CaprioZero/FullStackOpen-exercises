@@ -5,15 +5,11 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUser, logout } from './reducers/userReducer'
 
 const App = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
   const [updateState, setUpdateState] = useState(null)
 
@@ -22,39 +18,13 @@ const App = () => {
 
   {/*Because react usestate doesn't update state immediately due to it being async action so need to use useEffect to update each time value change*/}
   useEffect(() => {
+    dispatch(initializeUser())
     dispatch(initializeBlogs())
   }, [dispatch, updateState])
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('blogUsersInformation')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-      window.localStorage.setItem(
-        'blogUsersInformation', JSON.stringify(user)
-      )
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      dispatch(setNotification('Wrong username or password', 'error', 3))
-    }
-  }
-
   const handleLogout = async (event) => {
     event.preventDefault()
-    window.localStorage.removeItem('blogUsersInformation')
-    setUser(null)
+    dispatch(logout())
   }
 
   return (
@@ -63,13 +33,7 @@ const App = () => {
         <>
           <h2>Log in to application</h2>
           <Notification />
-          <LoginForm
-            handleLogin={handleLogin}
-            username={username}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            password={password}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-          />
+          <LoginForm />
         </> :
         <>
           <h2>Blogs</h2>
