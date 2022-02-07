@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { updateLikes, deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const Blog = ({ singleBlog, user, setUpdateState }) => {
+const Blog = ({ singleBlog, user }) => {
   const [visible, setVisible] = useState(false)
   const showWhenVisible = { display: visible ? '' : 'none' }
   const [removeVisible, setRemoveVisible] = useState(false)
@@ -31,9 +31,9 @@ const Blog = ({ singleBlog, user, setUpdateState }) => {
 
   const like = () => {
     try {
-      setUpdateState(dispatch(updateLikes(singleBlog, user.token)))
+      dispatch(updateLikes(singleBlog, user.token))
     } catch (exception) {
-      setUpdateState(dispatch(setNotification(`Information of "${singleBlog.title}" has already been removed from server`, 'error', 3)))
+      dispatch(setNotification(`Information of "${singleBlog.title}" has already been removed from server`, 'error', 3))
     }
   }
 
@@ -41,13 +41,13 @@ const Blog = ({ singleBlog, user, setUpdateState }) => {
     try {
       if (window.confirm(`Remove blog "${singleBlog.title}" by "${singleBlog.author}"?`)) {
         dispatch(deleteBlog(singleBlog.id, user.token))
-        setUpdateState(dispatch(setNotification(`Blog "${singleBlog.title}" delete successfully`, 'success', 3)))
+        dispatch(setNotification(`Blog "${singleBlog.title}" delete successfully`, 'success', 3))
       }
     } catch (exception) {
       if (exception.response.status === Number('401')) {
-        setUpdateState(dispatch(setNotification(`Something went wrong, can't delete "${singleBlog.title}", maybe you're not the creator of it`, 'error', 3)))
+        dispatch(setNotification(`Something went wrong, can't delete "${singleBlog.title}", maybe you're not the creator of it`, 'error', 3))
       } else {
-        setUpdateState(dispatch(setNotification(`Information of "${singleBlog.title}" has already been removed from server`, 'error', 3)))
+        dispatch(setNotification(`Information of "${singleBlog.title}" has already been removed from server`, 'error', 3))
       }
     }
   }

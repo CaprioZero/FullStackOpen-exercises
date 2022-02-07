@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({ token, setUpdateState }) => {
+const BlogForm = ({ token }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -22,7 +22,7 @@ const BlogForm = ({ token, setUpdateState }) => {
     setNewAuthor('')
     setNewUrl('')
     try {
-      setUpdateState(dispatch(createBlog(blogData, token)))
+      dispatch(createBlog(blogData, token))
       dispatch(setNotification(`A new blog "${blogData.title}" by "${blogData.author}" added`, 'success', 3))
     } catch (exception) {
       dispatch(setNotification(`Something went wrong, can't add "${blogData.title}"`, 'error', 3))
