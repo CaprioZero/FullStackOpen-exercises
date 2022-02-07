@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { login } from '../reducers/userReducer'
+import { login } from '../reducers/currentUserReducer'
 import { initializeBlogs } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 

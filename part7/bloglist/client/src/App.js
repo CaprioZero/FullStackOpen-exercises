@@ -5,11 +5,13 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
+import UserList from './components/UserList'
 import { initializeBlogs } from './reducers/blogReducer'
-import { initializeUser, logout } from './reducers/userReducer'
+import { initializeUser, logout } from './reducers/currentUserReducer'
+import { initializeAllUsers } from './reducers/usersReducer'
 
 const App = () => {
-  const user = useSelector(state => state.user)
+  const currentUser = useSelector(state => state.currentUser)
   const blogs = useSelector(state => state.blogs)
   const [updateState, setUpdateState] = useState(null)
 
@@ -20,6 +22,7 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeUser())
     dispatch(initializeBlogs())
+    dispatch(initializeAllUsers())
   }, [dispatch, updateState])
 
   const handleLogout = async (event) => {
@@ -29,7 +32,7 @@ const App = () => {
 
   return (
     <>
-      {user === null ?
+      {currentUser === null ?
         <>
           <h2>Log in to application</h2>
           <Notification />
@@ -38,13 +41,14 @@ const App = () => {
         <>
           <h2>Blogs</h2>
           <Notification />
-          <p>{user.name} logged in{'\u00A0'}<button id='logout-button' onClick={handleLogout} type="submit">Logout</button></p>
+          <p>{currentUser.name} logged in{'\u00A0'}<button id='logout-button' onClick={handleLogout} type="submit">Logout</button></p>
           <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
-            <BlogForm token={user.token} setUpdateState={setUpdateState} />
+            <BlogForm token={currentUser.token} setUpdateState={setUpdateState} />
           </Togglable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} singleBlog={blog} user={user} setUpdateState={setUpdateState} />
+            <Blog key={blog.id} singleBlog={blog} user={currentUser} setUpdateState={setUpdateState} />
           )}
+          <UserList />
         </>
       }
     </>
