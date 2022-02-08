@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import { initializeAllUsers } from './usersReducer'
 
 const blogReducer = (state = [], action) => {
   switch (action.type) {
@@ -32,6 +33,7 @@ export const createBlog = (content, receivedToken) => {
         type: 'NEW_BLOG',
         data: newBlog,
       })
+      dispatch(initializeAllUsers())
     } catch (error) {
       console.log(error)
     }
@@ -75,6 +77,7 @@ export const deleteBlog = (id, receivedToken) => {
         data: deletedBlog,
       })
       dispatch(initializeBlogs())
+      dispatch(initializeAllUsers())
     } catch (error) {
       console.log(error)
     }

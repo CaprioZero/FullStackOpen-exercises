@@ -15,14 +15,6 @@ const Blog = () => {
     return <Navigate to='/' />
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   const dispayDelete = currentBlog.user.username === currentUser.username
 
   const like = () => {
@@ -49,17 +41,15 @@ const Blog = () => {
   }
 
   return (
-    <div style={blogStyle} className='blog'>
-      <div>
-        <p>"{currentBlog.title}" by "{currentBlog.author}"</p>
-      </div>
+    <>
+      <h2>"{currentBlog.title}" by "{currentBlog.author}"</h2>
       <div>
         <p>Url: {currentBlog.url}</p>
         <p>Likes: {currentBlog.likes}{'\u00A0'}<button id='like-button' onClick={like}>Like</button></p>
         <p>Poster's name: {currentBlog.user.name}</p>
         {dispayDelete && <div><button id='delete-button' onClick={deleteFunc}>Delete</button></div>}
       </div>
-    </div>
+    </>
   )
 }
 

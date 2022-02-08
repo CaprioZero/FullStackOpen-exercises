@@ -9,7 +9,7 @@ import BlogDetail from './components/BlogDetail'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, logout } from './reducers/currentUserReducer'
 import { initializeAllUsers } from './reducers/usersReducer'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
   const currentUser = useSelector(state => state.currentUser)
@@ -28,6 +28,10 @@ const App = () => {
     dispatch(logout())
   }
 
+  const padding = {
+    padding: 5
+  }
+
   return (
     <>
       {currentUser === null ?
@@ -37,8 +41,12 @@ const App = () => {
           <LoginForm />
         </> :
         <>
+          <div>
+            <Link style={padding} to="/">blogs</Link>
+            <Link style={padding} to="/users">users</Link>
+            {currentUser.name} logged in{'\u00A0'}<button id='logout-button' onClick={handleLogout} type="submit">Logout</button>
+          </div>
           <Notification />
-          <p>{currentUser.name} logged in{'\u00A0'}<button id='logout-button' onClick={handleLogout} type="submit">Logout</button></p>
           <Routes>
             <Route path="/" element={<BlogsList />} />
 

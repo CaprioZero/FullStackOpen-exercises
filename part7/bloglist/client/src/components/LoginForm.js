@@ -17,7 +17,7 @@ const LoginForm = () => {
       dispatch(initializeBlogs())
       setUsername('')
       setPassword('')
-    } catch (exception) {
+    } catch (error) {
       dispatch(setNotification('Wrong username or password', 'error', 3))
     }
   }
