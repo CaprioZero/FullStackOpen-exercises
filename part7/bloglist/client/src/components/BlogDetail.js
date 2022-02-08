@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useMatch } from 'react-router-dom'
 import { updateLikes, deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { nanoid } from 'nanoid'
 
 const Blog = () => {
   const match = useMatch('/blogs/:id')
@@ -49,6 +50,10 @@ const Blog = () => {
         <p>Poster's name: {currentBlog.user.name}</p>
         {dispayDelete && <div><button id='delete-button' onClick={deleteFunc}>Delete</button></div>}
       </div>
+      <h4>comments</h4>
+      {currentBlog.comments.map((comment) =>
+        <li key={nanoid()}>{comment}</li>
+      )}
     </>
   )
 }
