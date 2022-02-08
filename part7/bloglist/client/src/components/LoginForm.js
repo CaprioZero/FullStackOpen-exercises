@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/currentUserReducer'
 import { initializeBlogs } from '../reducers/blogReducer'
-import { setNotification } from '../reducers/notificationReducer'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
@@ -12,14 +11,10 @@ const LoginForm = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    try {
-      dispatch(login(username, password))
-      dispatch(initializeBlogs())
-      setUsername('')
-      setPassword('')
-    } catch (error) {
-      dispatch(setNotification('Wrong username or password', 'error', 3))
-    }
+    dispatch(login(username, password))
+    dispatch(initializeBlogs())
+    setUsername('')
+    setPassword('')
   }
 
   const handleUsernameChange = (event) => {

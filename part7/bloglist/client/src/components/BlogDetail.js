@@ -1,14 +1,16 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useMatch } from 'react-router-dom'
-import { updateLikes, deleteBlog } from '../reducers/blogReducer'
+import { updateLikes, deleteBlog, addComment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { useField } from '../hooks/index'
 import { nanoid } from 'nanoid'
 
 const Blog = () => {
   const match = useMatch('/blogs/:id')
   const currentBlog = useSelector(state => state.blogs.find(blog => blog.id === match.params.id))
   const currentUser = useSelector(state => state.currentUser)
+  const commentContent = useField('text')
 
   const dispatch = useDispatch()
 
@@ -41,6 +43,23 @@ const Blog = () => {
     }
   }
 
+  // const handleAddComment = (comment) => {
+  //   dispatch(addComment(currentBlog, comment))
+  // }
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    handleAddComment(commentContent.value)
+    commentContent.clear()
+  }
+
+  const handleAddComment = (commentContent) => {
+    dispatch(addComment(currentBlog, commentContent))
+    dispatch(setNotification(`Comment "${commentContent}" added successfully`, 'success', 3))
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  const { clear, ...commentExcludeClear } = commentContent
+
   return (
     <>
       <h2>"{currentBlog.title}" by "{currentBlog.author}"</h2>
@@ -51,6 +70,16 @@ const Blog = () => {
         {dispayDelete && <div><button id='delete-button' onClick={deleteFunc}>Delete</button></div>}
       </div>
       <h4>comments</h4>
+      <form onSubmit={handleSubmit}>
+        <input {...commentExcludeClear} />
+        <button type='submit'>add comment</button>
+      </form>
+      {/* <form onSubmit={handleComment}>
+        <div>
+          <input id="comment" type="text" name="comment" />
+          <button id='blog-comment' type="submit">add comment</button>
+        </div>
+      </form> */}
       {currentBlog.comments.map((comment) =>
         <li key={nanoid()}>{comment}</li>
       )}

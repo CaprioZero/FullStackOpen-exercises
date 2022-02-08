@@ -20,6 +20,17 @@ const blogReducer = (state = [], action) => {
   }
   case 'DELETE_BLOG':
     return state.filter(object => object.id !== action.data.id)
+  case 'COMMENT': {
+    const id = action.data.id
+    const blogToChange = state.find(n => n.id === id)
+    const changedBlog = {
+      ...blogToChange,
+      comments: action.data.comments
+    }
+    return state.map(blog =>
+      blog.id !== id ? blog : changedBlog
+    )
+  }
   default:
     return state
   }
@@ -31,7 +42,7 @@ export const createBlog = (content, receivedToken) => {
       const newBlog = await blogService.create(content, receivedToken)
       dispatch({
         type: 'NEW_BLOG',
-        data: newBlog,
+        data: newBlog
       })
       dispatch(initializeAllUsers())
     } catch (error) {
@@ -46,7 +57,7 @@ export const initializeBlogs = () => {
       const blogs = await blogService.getAll()
       dispatch({
         type: 'INIT_BLOGS',
-        data: blogs,
+        data: blogs
       })
     } catch (error) {
       console.log(error)
@@ -60,7 +71,21 @@ export const updateLikes = (blog, receivedToken) => {
       const updatedBlog = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 }, receivedToken)
       dispatch({
         type: 'LIKE',
-        data: updatedBlog,
+        data: updatedBlog
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const addComment = (blog, comment) => {
+  return async dispatch => {
+    try {
+      const updatedBlog = await blogService.comment({ ...blog, comments: blog.comments.concat([comment]) })
+      dispatch({
+        type: 'COMMENT',
+        data: updatedBlog
       })
     } catch (error) {
       console.log(error)
@@ -74,7 +99,7 @@ export const deleteBlog = (id, receivedToken) => {
       const deletedBlog = await blogService.remove(id, receivedToken)
       dispatch({
         type: 'DELETE_BLOG',
-        data: deletedBlog,
+        data: deletedBlog
       })
       dispatch(initializeBlogs())
       dispatch(initializeAllUsers())

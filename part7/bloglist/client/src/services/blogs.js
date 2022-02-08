@@ -34,6 +34,11 @@ const update = async (id, newObject, userToken) => {
   return response.data
 }
 
+const comment = async (newObject) => {
+  const response = await axios.post(`${baseUrl}/${newObject.id}/comments`, newObject)
+  return response.data
+}
+
 const remove = async (id, userToken) => {
   setToken(userToken)
 
@@ -46,4 +51,4 @@ const remove = async (id, userToken) => {
 }
 
 // eslint-disable-next-line
-export default { getAll, create, update, remove, setToken }
+export default { getAll, create, update, remove, setToken, comment }

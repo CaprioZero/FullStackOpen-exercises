@@ -1,5 +1,6 @@
 import blogService from '../services/blogs'
 import loginService from '../services/login'
+import { setNotification } from './notificationReducer'
 
 const userReducer = (state = null, action) => {
   switch (action.type) {
@@ -47,7 +48,7 @@ export const login = (username, password) => {
         user: user
       })
     } catch (error) {
-      console.log(error)
+      dispatch(setNotification('Wrong username or password', 'error', 3))
     }
   }
 }
