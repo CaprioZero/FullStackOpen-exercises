@@ -74,6 +74,7 @@ export const deleteBlog = (id, receivedToken) => {
         type: 'DELETE_BLOG',
         data: deletedBlog,
       })
+      dispatch(initializeBlogs())
     } catch (error) {
       console.log(error)
     }

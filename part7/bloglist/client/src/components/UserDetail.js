@@ -1,14 +1,12 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Navigate, useMatch } from 'react-router-dom'
+import { useMatch } from 'react-router-dom'
 
 const UserDetail = () => {
   const match = useMatch('/users/:id')
   const userBlog = useSelector(state => state.users.find(user => user.id === match.params.id))
 
-  if (!userBlog) {
-    return <Navigate to='/users' />
-  }
+  //fix 7.14 bug, which is cause by redux state return to null on refresh, by using redux-persist to save state to localStorage
 
   return (
     <>

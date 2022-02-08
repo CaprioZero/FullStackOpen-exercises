@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
-import Blog from '../components/Blog'
 import BlogForm from '../components/BlogForm'
 import Togglable from '../components/Togglable'
+import { Link } from 'react-router-dom'
 
 const BlogsList = () => {
   const currentUser = useSelector(state => state.currentUser)
@@ -15,8 +15,10 @@ const BlogsList = () => {
       <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
         <BlogForm token={currentUser.token} />
       </Togglable>
-      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} singleBlog={blog} user={currentUser} />
+      {blogs.map(blog =>
+        <li key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>"{blog.title}" by "{blog.author}"</Link>
+        </li>
       )}
     </>
   )

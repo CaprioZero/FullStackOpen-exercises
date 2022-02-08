@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import UsersList from './components/UsersList'
 import UserDetail from './components/UserDetail'
 import BlogsList from './components/BlogsList'
+import BlogDetail from './components/BlogDetail'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, logout } from './reducers/currentUserReducer'
 import { initializeAllUsers } from './reducers/usersReducer'
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/" element={<BlogsList />} />
 
             <Route path="blogs" element={<BlogsList />} />
+            <Route path="blogs/:id" element={<BlogDetail />} />
 
             <Route path="users" element={<UsersList />} />
             <Route path="users/:id" element={<UserDetail />} />
