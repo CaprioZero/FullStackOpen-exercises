@@ -48,6 +48,7 @@ export const login = (username, password) => {
         user: user
       })
     } catch (error) {
+      console.log(error)
       dispatch(setNotification('Wrong username or password', 'error', 3))
     }
   }
@@ -55,11 +56,15 @@ export const login = (username, password) => {
 
 export const logout = () => {
   return async dispatch => {
-    window.localStorage.removeItem('blogUsersInformation')
-    dispatch({
-      type: 'LOGOUT',
-      user: null
-    })
+    try {
+      window.localStorage.removeItem('blogUsersInformation')
+      dispatch({
+        type: 'LOGOUT',
+        user: null
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 

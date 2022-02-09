@@ -1,6 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useMatch } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+import Typography from '@mui/material/Typography'
 
 const UserDetail = () => {
   const match = useMatch('/users/:id')
@@ -10,12 +12,21 @@ const UserDetail = () => {
 
   return (
     <>
-      <h2>{userBlog.name}</h2>
-      <h4>added blogs</h4>
+      <Helmet>
+        <title>{userBlog.name}</title>
+      </Helmet>
+      <Typography variant="h5" gutterBottom component="div">
+        {userBlog.name}
+      </Typography>
+      <Typography variant="h6" gutterBottom component="div">
+      Added blogs
+      </Typography>
       <ul>
         {userBlog.blogs.map(blog =>
           <li key={blog.id}>
-            <p>{blog.title}</p>
+            <Typography variant="body1" gutterBottom component="div">
+              {blog.title}
+            </Typography>
           </li>
         )}
       </ul>

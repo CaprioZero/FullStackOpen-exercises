@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+
 import { login } from '../reducers/currentUserReducer'
 import { initializeBlogs } from '../reducers/blogReducer'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
   const dispatch = useDispatch()
 
   const handleLogin = async (event) => {
@@ -29,24 +31,29 @@ const LoginForm = () => {
     <>
       <form onSubmit={handleLogin}>
         <div>
-          Username{'\u00A0'}
-          <input
+          <TextField
+            label="Username"
+            variant="standard"
             id='username'
-            type="text"
+            type='text'
             value={username}
-            name="Username"
+            name='Username'
             onChange={handleUsernameChange} />
         </div>
         <div>
-          Password{'\u00A0'}
-          <input
+          <TextField
+            label="Password"
+            variant="standard"
             id='password'
-            type="password"
+            type='password'
             value={password}
-            name="Password"
+            name='Password'
             onChange={handlePasswordChange} />
         </div>
-        <button id="login-button" type="submit">Login</button>
+        <br />
+        <div>
+          <Button variant='contained' id='login-button' type='submit'>Login</Button>
+        </div>
       </form>
     </>
   )

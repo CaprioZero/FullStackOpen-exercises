@@ -50,5 +50,4 @@ const remove = async (id, userToken) => {
   return response.data
 }
 
-// eslint-disable-next-line
 export default { getAll, create, update, remove, setToken, comment }

@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+
 import { createBlog } from '../reducers/blogReducer'
-import { setNotification } from '../reducers/notificationReducer'
 
 const BlogForm = ({ token }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-
   const dispatch = useDispatch()
 
   const addBlog = async (event) => {
@@ -21,12 +22,7 @@ const BlogForm = ({ token }) => {
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
-    try {
-      dispatch(createBlog(blogData, token))
-      dispatch(setNotification(`A new blog "${blogData.title}" by "${blogData.author}" added`, 'success', 3))
-    } catch (exception) {
-      dispatch(setNotification(`Something went wrong, can't add "${blogData.title}"`, 'error', 3))
-    }
+    dispatch(createBlog(blogData, token))
   }
 
   const handleTitleChange = (event) => {
@@ -46,16 +42,16 @@ const BlogForm = ({ token }) => {
       <h2>Create new</h2>
       <form onSubmit={addBlog}>
         <div>
-          Title: <input id='title' value={newTitle} onChange={handleTitleChange} />
+          <TextField label="Input title" id='title' value={newTitle} onChange={handleTitleChange} />
         </div>
         <div>
-          Author: <input id='author' value={newAuthor} onChange={handleAuthorChange} />
+          <TextField label="Input author" id='author' value={newAuthor} onChange={handleAuthorChange} />
         </div>
         <div>
-          Url: <input id='url' value={newUrl} onChange={handleUrlChange} />
+          <TextField label="Input url" id='url' value={newUrl} onChange={handleUrlChange} />
         </div>
         <div>
-          <button id='blog-submit' type="submit">Create</button>
+          <Button variant='outlined' color='success' id='blog-submit' type='submit'>Create</Button>
         </div>
       </form>
     </>

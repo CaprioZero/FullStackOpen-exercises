@@ -1,5 +1,6 @@
 import blogService from '../services/blogs'
 import { initializeAllUsers } from './usersReducer'
+import { setNotification } from './notificationReducer'
 
 const blogReducer = (state = [], action) => {
   switch (action.type) {
@@ -45,8 +46,10 @@ export const createBlog = (content, receivedToken) => {
         data: newBlog
       })
       dispatch(initializeAllUsers())
+      dispatch(setNotification(`A new blog "${newBlog.title}" by "${newBlog.author}" added`, 'success', 3))
     } catch (error) {
       console.log(error)
+      dispatch(setNotification(`Something went wrong, can't add "${content.title}"`, 'error', 3))
     }
   }
 }
@@ -75,6 +78,7 @@ export const updateLikes = (blog, receivedToken) => {
       })
     } catch (error) {
       console.log(error)
+      dispatch(setNotification(`Information of "${blog.title}" has already been removed from server`, 'error', 3))
     }
   }
 }
@@ -87,8 +91,10 @@ export const addComment = (blog, comment) => {
         type: 'COMMENT',
         data: updatedBlog
       })
+      dispatch(setNotification(`Comment "${comment}" added successfully`, 'success', 3))
     } catch (error) {
       console.log(error)
+      dispatch(setNotification(`Something went wrong, can't add "${comment}"`, 'error', 3))
     }
   }
 }
@@ -103,8 +109,14 @@ export const deleteBlog = (id, receivedToken) => {
       })
       dispatch(initializeBlogs())
       dispatch(initializeAllUsers())
+      dispatch(setNotification('Blog delete successfully', 'success', 3))
     } catch (error) {
       console.log(error)
+      if (error.response.status === Number('401')) {
+        dispatch(setNotification('Something went wrong, can\'t delete the blog, maybe you\'re not the creator of it', 'error', 3))
+      } else {
+        dispatch(setNotification('Information of this blog has already been removed from server', 'error', 3))
+      }
     }
   }
 }
