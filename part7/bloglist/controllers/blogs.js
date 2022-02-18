@@ -1,5 +1,4 @@
 const blogsRouter = require('express').Router()
-const { truncateSync } = require('fs')
 const Blog = require('../models/blog')
 const middleware = require('../utils/middleware')
 
