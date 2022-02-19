@@ -3,7 +3,11 @@ const Books = (props) => {
     return null
   }
 
-  const books = []
+  if (props.booksList.loading)  {
+    return <div>loading...</div>
+  }
+
+  const books = props.booksList.data.allBooks
 
   return (
     <div>

@@ -3,7 +3,11 @@ const Authors = (props) => {
     return null
   }
 
-  const authors = props.authorsList
+  if (props.authorsList.loading)  {
+    return <div>loading...</div>
+  }
+
+  const authors = props.authorsList.data.allAuthors
 
   return (
     <div>
