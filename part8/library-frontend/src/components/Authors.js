@@ -1,9 +1,37 @@
+import { useState, useEffect } from 'react'
+import { useMutation } from '@apollo/client'
+
+import { EDIT_AUTHOR_BIRTH, ALL_AUTHORS } from '../queries'
+
 const Authors = (props) => {
+  const [name, setName] = useState('')
+  const [born, setBorn] = useState('')
+
+  const [changeBirthYear, result] = useMutation(EDIT_AUTHOR_BIRTH, {
+    refetchQueries: [{ query: ALL_AUTHORS }]
+  })
+
+  const submit = (event) => {
+    event.preventDefault()
+
+    changeBirthYear({ variables: { name, born: parseInt(born, 10) } })
+
+    setName('')
+    setBorn('')
+  }
+
+  useEffect(() => {
+    if (result.data && result.data.editAuthor === null) {
+      console.log('author not found')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result.data])
+
   if (!props.show) {
     return null
   }
 
-  if (props.authorsList.loading)  {
+  if (props.authorsList.loading) {
     return <div>loading...</div>
   }
 
@@ -28,6 +56,24 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+
+      <h2>Set birthyear</h2>
+      <form onSubmit={submit}>
+        <div>
+          name <input
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+          />
+        </div>
+        <div>
+          born <input
+            type="number"
+            value={born}
+            onChange={({ target }) => setBorn(target.value)}
+          />
+        </div>
+        <button type='submit'>Update author</button>
+      </form>
     </div>
   )
 }
