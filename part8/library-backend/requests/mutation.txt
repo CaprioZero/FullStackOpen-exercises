@@ -1,0 +1,10 @@
+mutation {
+  addBook(
+    title: "The Demon",
+    author: "Fyodor Dostoevsky",
+    published: 1872,
+    genres: ["classic", "revolution"]
+  ) {
+    title
+  }
+}
