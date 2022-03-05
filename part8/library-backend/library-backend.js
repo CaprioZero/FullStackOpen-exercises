@@ -135,25 +135,33 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      if (args.author && !args.genre) {
-        return books.filter(book => book.author === args.author)
-      } else if (args.genre && !args.author) {
-        return books.filter(book => book.genres.includes(args.genre))
-      } else if (args.author && args.genre) {
-        return books.filter(book => book.author === args.author && book.genres.includes(args.genre))
+    bookCount: async () => Book.collection.countDocuments(),
+
+    authorCount: async () => Author.collection.countDocuments(),
+
+    allBooks: async (root, args) => {
+      if (args.author && args.genre) {
+        const author = await Author.findOne({ name: args.author });
+        return await Book.find({ author: author.id, genres: { $in: [args.genre] } }).populate('author')
+      } else if (args.author) {
+        const author = await Author.findOne({ name: args.author });
+        return await Book.find({ author: { $in: author.id } }).populate('author')
+      } else if (args.genre) {
+        return await Book.find({ genres: { $in: args.genre } }).populate('author')
+      } else {
+        return await Book.find({}).populate('author')
       }
-      return books
     },
-    allAuthors: () => authors,
+
+    allAuthors: async () => await Author.find({})
   },
+
   Author: {
-    bookCount: (root) => {
-      return books.filter(book => book.author === root.name).length
+    bookCount: async (root) => {
+      return Book.countDocuments({ author: root })
     }
   },
+
   Mutation: {
     addBook: async (root, args) => {
       const bookExisted = await Book.findOne({ title: args.title });
@@ -185,15 +193,22 @@ const resolvers = {
       }
       return newBook
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(author => author.name === args.name)
+
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
       if (!author) {
         return null
       }
 
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map(author => author.name === args.name ? updatedAuthor : author)
-      return updatedAuthor
+      author.born = args.setBornTo
+      try {
+        await author.save();
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
+      }
+      return author
     }
   }
 }
@@ -203,8 +218,6 @@ const server = new ApolloServer({
   resolvers,
 })
 
-let PORT = process.env.PORT
-
-server.listen(PORT, () => {
-  console.log(`Server ready at http://localhost:${PORT}`)
+server.listen().then(({ url }) => {
+  console.log(`Server ready at ${url}`)
 })

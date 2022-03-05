@@ -8,3 +8,10 @@ mutation {
     title
   }
 }
+
+mutation {
+  editAuthor(name: "Joshua Kerievsky", setBornTo: 1958) {
+    name
+    born
+  }
+}
