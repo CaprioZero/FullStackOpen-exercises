@@ -33,3 +33,9 @@ query {
     }
   }
 }
+
+query {
+  me {
+    username
+  }
+}

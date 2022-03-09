@@ -15,3 +15,17 @@ mutation {
     born
   }
 }
+
+mutation {
+  createUser(username: "root", favoriteGenre: "refactoring") {
+    username
+    favoriteGenre
+    id
+  }
+}
+
+mutation {
+  login(username: "root", password: "secret") {
+    value
+  }
+}
