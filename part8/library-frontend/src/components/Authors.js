@@ -3,11 +3,14 @@ import { useMutation } from '@apollo/client'
 
 import { EDIT_AUTHOR_BIRTH, ALL_AUTHORS } from '../queries'
 
-const Authors = (props) => {
+const Authors = ({ show, authorsList, setError }) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
   const [changeBirthYear, result] = useMutation(EDIT_AUTHOR_BIRTH, {
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message)
+    },  //doesn't even show error msg on FE, maybe related to this https://github.com/apollographql/apollo-client/issues/2810 and 5708
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
@@ -26,15 +29,15 @@ const Authors = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result.data])
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
-  if (props.authorsList.loading) {
+  if (authorsList.loading) {
     return <div>loading...</div>
   }
 
-  const authors = props.authorsList.data.allAuthors
+  const authors = authorsList.data.allAuthors
 
   return (
     <div>

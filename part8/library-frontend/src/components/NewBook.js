@@ -1,31 +1,23 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
 
-const NewBook = (props) => {
+const NewBook = ({ show, setError }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
     onError: (error) => {
-      notify(error.graphQLErrors[0].message)
-    }
+      setError(error.graphQLErrors[0].message)
+    },  //onError before refetchQueries because app somehow doesn't render error msg on screen if write it second after refetch
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
   })
 
-  if (!props.show) {
+  if (!show) {
     return null
-  }
-
-  const notify = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 10000)
   }
 
   const submit = async (event) => {
@@ -47,7 +39,6 @@ const NewBook = (props) => {
 
   return (
     <>
-      <Notify errorMessage={errorMessage} />
       <div>
         <form onSubmit={submit}>
           <div>
@@ -82,17 +73,6 @@ const NewBook = (props) => {
         </form>
       </div>
     </>
-  )
-}
-
-const Notify = ({ errorMessage }) => {
-  if (!errorMessage) {
-    return null
-  }
-  return (
-    <div style={{ color: 'red' }}>
-      {errorMessage}
-    </div>
   )
 }
 
