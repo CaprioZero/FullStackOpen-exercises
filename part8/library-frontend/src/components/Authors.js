@@ -10,7 +10,7 @@ const Authors = ({ show, authorsList, setError }) => {
   const [changeBirthYear, result] = useMutation(EDIT_AUTHOR_BIRTH, {
     onError: (error) => {
       setError(error.graphQLErrors[0].message)
-    },  //doesn't even show error msg on FE, maybe related to this https://github.com/apollographql/apollo-client/issues/2810 and 5708
+    },
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
@@ -24,7 +24,7 @@ const Authors = ({ show, authorsList, setError }) => {
 
   useEffect(() => {
     if (result.data && result.data.editAuthor === null) {
-      console.log('author not found')
+      setError('author not found')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result.data])
