@@ -3,6 +3,7 @@ import { useQuery, useApolloClient } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import Recommendation from './components/Recommendation'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import { ALL_AUTHORS, ALL_BOOKS } from './queries'
@@ -17,11 +18,11 @@ const App = () => {
   const booksResult = useQuery(ALL_BOOKS)
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('library-user-token');
+    const loggedInUser = localStorage.getItem('library-user-token')
     if (loggedInUser) {
-      setToken(loggedInUser);
+      setToken(loggedInUser)
     }
-  }, [setToken]);
+  }, [setToken])
 
   const notify = (message) => {
     setErrorMessage(message)
@@ -34,32 +35,39 @@ const App = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
-    setPage('authors')
   }
 
   return (
     <div>
       <Notification errorMessage={errorMessage} />
-      <div>
-        <button onClick={() => setPage('authors')}>authors</button>
-        <button onClick={() => setPage('books')}>books</button>
-        {token ? (
-          <>
+      {/* refactor login to be a separate page because ME query need token from login and it doesn't get it on first load so it return null*/}
+      {!token ? (
+        <>
+          <Notification errorMessage={errorMessage} />
+          <h2>Login</h2>
+          <LoginForm setToken={setToken} setError={notify} />
+        </>
+      ) : (
+        <>
+          <div>
+            <button onClick={() => setPage('authors')}>authors</button>
+            <button onClick={() => setPage('books')}>books</button>
             <button onClick={() => setPage('add')}>add book</button>
+            <button onClick={() => setPage('recommend')}>recommend</button>
             <button onClick={logout}>logout</button>
-          </>
-        ) : (
-          <button onClick={() => setPage('login')}>login</button>
-        )}
-      </div>
+          </div>
 
-      <Authors show={page === 'authors'} authorsList={authorsResult} setError={notify} />
+          <Authors show={page === 'authors'} authorsList={authorsResult} setError={notify} />
 
-      <Books show={page === 'books'} booksList={booksResult} />
+          <Books show={page === 'books'} booksList={booksResult} />
 
-      <NewBook show={page === 'add'} setError={notify} />
+          <NewBook show={page === 'add'} setError={notify} />
 
-      <LoginForm show={page === 'login'} setToken={setToken} setError={notify} checkLogIn={token} setPage={setPage} />
+          <Recommendation show={page === 'recommend'} booksList={booksResult} />
+
+        </>
+      )}
+
     </div>
   )
 }

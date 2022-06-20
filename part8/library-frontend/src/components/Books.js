@@ -7,7 +7,7 @@ const Books = ({ show, booksList }) => {
 
   useEffect(() => {
     if (booksList.loading === false && booksList.data) {
-      setBooks(booksList.data.allBooks);
+      setBooks(booksList.data.allBooks)
     }
   }, [booksList.loading, booksList.data])
 
@@ -42,7 +42,7 @@ const Books = ({ show, booksList }) => {
 
   return (
     <div>
-      <h2>books</h2>
+      <h2>Books</h2>
       <p id='genre'></p>
 
       <table>
