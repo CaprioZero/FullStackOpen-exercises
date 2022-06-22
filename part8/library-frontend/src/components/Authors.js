@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 
 import { EDIT_AUTHOR_BIRTH, ALL_AUTHORS } from '../queries'
 
-const Authors = ({ show, authorsList, setError }) => {
+const Authors = ({ show, setError }) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
+  const authorsList = useQuery(ALL_AUTHORS)
   const [changeBirthYear, result] = useMutation(EDIT_AUTHOR_BIRTH, {
     onError: (error) => {
       setError(error.graphQLErrors[0].message)

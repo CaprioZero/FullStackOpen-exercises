@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from 'react'
+import { useLazyQuery, useQuery } from '@apollo/client'
+
+import { ALL_BOOKS } from '../queries'
 const _ = require('lodash')
 
-const Books = ({ show, booksList }) => {
+const Books = ({ show }) => {
   const [books, setBooks] = useState(null)
-  const [filteredBooks, setFilteredBooks] = useState(null)
+  const [genre, setGenre] = useState("all")
+
+  const originalBooksList = useQuery(ALL_BOOKS)
+  //have to prevent caching to stop apollo from not updating "all" list when switch from filter to show all
+  const [booksList, { loading, data }] = useLazyQuery(ALL_BOOKS, { fetchPolicy: 'network-only' })
 
   useEffect(() => {
-    if (booksList.loading === false && booksList.data) {
-      setBooks(booksList.data.allBooks)
+    if (genre === "all") {
+      booksList()
+    } else {
+      booksList({ variables: { genre } })
     }
-  }, [booksList.loading, booksList.data])
+  }, [booksList, genre])
+
+  useEffect(() => {
+    if (data) {
+      setBooks(data.allBooks)
+    }
+  }, [data, setBooks])
 
   if (!show) {
     return null
   }
 
-  if (booksList.loading) {
+  if (originalBooksList.loading && loading) {
     return <div>loading...</div>
   }
 
   const genresList = ["all"].concat(
     _.union(
-      books.reduce((arr, book) => {
+      originalBooksList.data.allBooks.reduce((arr, book) => {
         return arr.concat(book.genres)
       }, [])
     )
@@ -29,15 +44,12 @@ const Books = ({ show, booksList }) => {
 
   const handleClick = (event) => {
     const filterValue = event.target.innerText
-    const filteredBooks = books.filter(val => val.genres.includes(filterValue))
-
     if (filterValue === "all") {
       document.getElementById("genre").innerHTML = ''
-      return setFilteredBooks(books)
     } else {
       document.getElementById("genre").innerHTML = 'in genre ' + filterValue.bold()
-      setFilteredBooks(filteredBooks)
     }
+    setGenre(filterValue)
   }
 
   return (
@@ -52,13 +64,7 @@ const Books = ({ show, booksList }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {filteredBooks ? filteredBooks.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          )) : books.map((a) => (
+          {books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>

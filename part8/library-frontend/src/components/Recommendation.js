@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 
-import { ME } from '../queries'
+import { ALL_BOOKS, ME } from '../queries'
 
-const Recommend = ({ show, booksList }) => {
+const Recommend = ({ show }) => {
   const [books, setBooks] = useState(null)
   const [user, setUser] = useState(null)
+
+  const booksList = useQuery(ALL_BOOKS)
   const userResult = useQuery(ME)
 
   useEffect(() => {
