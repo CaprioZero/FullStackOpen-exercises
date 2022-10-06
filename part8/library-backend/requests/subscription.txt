@@ -1,0 +1,12 @@
+subscription BookAdded {
+  bookAdded {
+    title 
+    author {
+      name
+      born
+      bookCount
+    }
+    published 
+    genres
+  }
+}
