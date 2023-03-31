@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
+import { CREATE_BOOK, ALL_BOOKS } from '../queries'
+import { updateCache } from '../App'
 
 const NewBook = ({ show, setError }) => {
   const [title, setTitle] = useState('')
@@ -13,7 +14,10 @@ const NewBook = ({ show, setError }) => {
     onError: (error) => {
       setError(error.graphQLErrors[0].message)
     },  //onError before refetchQueries because app somehow doesn't render error msg on screen if write it second after refetch
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+    refetchQueries: [{ query: ALL_BOOKS }],
+    update: (cache, response) => {
+      updateCache(cache, { query: ALL_BOOKS }, response.data.addBook)
+    },
   })
 
   if (!show) {
@@ -58,7 +62,7 @@ const NewBook = ({ show, setError }) => {
             <input
               type="number"
               value={published}
-              onChange={({ target }) => setPublished(target.value)} />
+              onChange={({ target }) => setPublished(parseInt(target.value))} />
           </div>
           <div>
             <input

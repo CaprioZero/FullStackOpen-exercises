@@ -9,8 +9,7 @@ const Books = ({ show }) => {
   const [genre, setGenre] = useState("all")
 
   const originalBooksList = useQuery(ALL_BOOKS)
-  //have to prevent caching to stop apollo from not updating "all" list when switch from filter to show all
-  const [booksList, { loading, data }] = useLazyQuery(ALL_BOOKS, { fetchPolicy: 'network-only' })
+  const [booksList, { loading, data }] = useLazyQuery(ALL_BOOKS)
 
   useEffect(() => {
     if (genre === "all") {
@@ -65,7 +64,7 @@ const Books = ({ show }) => {
             <th>published</th>
           </tr>
           {books.map((a) => (
-            <tr key={a.title}>
+            <tr key={a.id}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
               <td>{a.published}</td>

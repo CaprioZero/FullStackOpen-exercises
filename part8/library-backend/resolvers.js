@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { UserInputError, AuthenticationError } = require('apollo-server')
+const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
 const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
@@ -30,7 +30,13 @@ const resolvers = {
       }
     },
 
-    allAuthors: async () => await Author.find({}),
+    allAuthors: async (root, args, context) => {
+      if (!args.born) {
+        return Author.find({})
+      }
+
+      return Author.find({ born: { $exists: args.born === 'YES' } })
+    },
 
     me: (root, args, { currentUser }) => {
       return currentUser
@@ -46,14 +52,22 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('not authenticated')
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          }
+        })
       }
 
       const bookExisted = await Book.findOne({ title: args.title });
       if (bookExisted) {
-        throw new UserInputError('No duplicate book', {
-          invalidArgs: args,
-        });
+        throw new GraphQLError('No duplicate book', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args,
+            error
+          }
+        })
       }
 
       let author = await Author.findOne({ name: args.author })
@@ -62,8 +76,12 @@ const resolvers = {
         try {
           await author.save()
         } catch (error) {
-          throw new UserInputError(error.message, {
-            invalidArgs: args,
+          throw new GraphQLError(error.message, {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args,
+              error
+            }
           })
         }
       }
@@ -73,8 +91,12 @@ const resolvers = {
       try {
         await newBook.save()
       } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args,
+            error
+          }
         })
       }
 
@@ -85,7 +107,11 @@ const resolvers = {
 
     editAuthor: async (root, args, { currentUser }) => {
       if (!currentUser) {
-        throw new AuthenticationError('not authenticated')
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          }
+        })
       }
 
       const author = await Author.findOne({ name: args.name })
@@ -97,9 +123,13 @@ const resolvers = {
       try {
         await author.save();
       } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
-        });
+        throw new GraphQLError('Editing year of birth failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args,
+            error
+          }
+        })
       }
       return author
     },
@@ -109,8 +139,12 @@ const resolvers = {
 
       return user.save()
         .catch(error => {
-          throw new UserInputError(error.message, {
-            invalidArgs: args,
+          throw new GraphQLError('Creating user failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args,
+              error
+            }
           })
         })
     },
@@ -119,7 +153,9 @@ const resolvers = {
       const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== 'secret') {
-        throw new UserInputError("wrong credentials")
+        throw new GraphQLError('wrong credentials', {
+          extensions: { code: 'BAD_USER_INPUT' }
+        })
       }
 
       const userForToken = {

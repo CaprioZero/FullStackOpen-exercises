@@ -4,9 +4,16 @@ query {
 }
 
 query {
-  allAuthors {
+  allAuthors(born: YES) {
     name
     born
+    bookCount
+  }
+}
+
+query {
+  allAuthors(born: NO) {
+    name
     bookCount
   }
 }

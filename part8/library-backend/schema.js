@@ -1,6 +1,4 @@
-const { gql } = require('apollo-server')
-
-const typeDefs = gql`
+const typeDefs = `
   type Book {
     title: String!
     published: Int!
@@ -13,6 +11,7 @@ const typeDefs = gql`
     name: String!
     born: Int
     bookCount: Int!
+    id: ID!
   }
 
   type User {
@@ -25,11 +24,16 @@ const typeDefs = gql`
     value: String!
   }
 
+  enum YesNo {
+    YES
+    NO
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]!
+    allAuthors(born: YesNo): [Author!]!
     me: User
   }
 
